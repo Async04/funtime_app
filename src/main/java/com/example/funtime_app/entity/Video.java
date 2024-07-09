@@ -1,6 +1,5 @@
 package com.example.funtime_app.entity;
 
-import com.example.funtime_app.entity.enums.PostType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "posts")
-public class Post {
+@Table(name = "video")
+public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -28,6 +27,9 @@ public class Post {
     @ManyToOne
     private Category category;
 
+    @OneToMany
+    private List<CategoryTag> tags;
+
     @OneToOne
     private Attachment attachment;
 
@@ -35,6 +37,5 @@ public class Post {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
 
 }
