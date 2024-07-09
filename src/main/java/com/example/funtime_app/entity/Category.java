@@ -17,7 +17,8 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
-
+    @OneToOne
+    private Attachment attachment;
     private String name;
     private String tagName;
 
