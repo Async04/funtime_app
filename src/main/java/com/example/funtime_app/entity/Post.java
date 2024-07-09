@@ -24,6 +24,7 @@ public class Post {
 
     private String title;
     private String description;
+
     @ManyToOne
     private Category category;
 
@@ -32,6 +33,8 @@ public class Post {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
+
+
 
     @Enumerated( EnumType.STRING)
     private PostType type;
