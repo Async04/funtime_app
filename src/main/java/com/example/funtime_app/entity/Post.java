@@ -1,12 +1,10 @@
 package com.example.funtime_app.entity;
 
-import com.example.funtime_app.entity.enums.PostType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
