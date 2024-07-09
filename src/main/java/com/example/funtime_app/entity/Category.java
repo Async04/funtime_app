@@ -3,6 +3,7 @@ package com.example.funtime_app.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,6 +21,9 @@ public class Category {
     @OneToOne
     private Attachment attachment;
     private String name;
-    private String tagName;
+
+    private Attachment photo;
+    @OneToMany
+    private List<CategoryTag> tags;
 
 }
