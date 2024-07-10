@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -13,8 +14,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "posts")
-public class Post {
+@Table(name = "video")
+public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -26,6 +27,9 @@ public class Post {
     @ManyToOne
     private Category category;
 
+    @OneToMany
+    private List<CategoryTag> tags;
+
     @OneToOne
     private Attachment attachment;
 
@@ -33,6 +37,5 @@ public class Post {
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
 
 }

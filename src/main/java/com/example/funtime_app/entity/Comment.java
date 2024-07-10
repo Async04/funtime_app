@@ -17,8 +17,8 @@ import java.util.UUID;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
     private UUID id;
+
 
     private String body;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,10 +27,14 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private User commentedBy;
 
-    private LocalDateTime createdAt;
-
     @OneToMany
     private List<Comment> replies;
+
+    private UUID parentCommentId;
+
+    private LocalDateTime createdAt;
+
+
 
 
 }
