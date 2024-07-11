@@ -22,6 +22,7 @@ public class Category {
     private Attachment attachment;
     private String name;
 
+    @OneToOne
     private Attachment photo;
     @OneToMany
     private List<CategoryTag> tags;
