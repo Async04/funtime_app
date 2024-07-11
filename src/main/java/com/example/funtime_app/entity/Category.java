@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "category")
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -21,8 +21,6 @@ public class Category {
     @OneToOne
     private Attachment attachment;
     private String name;
-
-    private Attachment photo;
     @OneToMany
     private List<CategoryTag> tags;
 

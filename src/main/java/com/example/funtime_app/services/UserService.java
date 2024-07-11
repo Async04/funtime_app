@@ -6,11 +6,18 @@ import com.example.funtime_app.interfaces.UserServiceInterface;
 import com.example.funtime_app.mappers.UserMapper;
 import com.example.funtime_app.repository.UserRepository;
 import com.github.fashionbrot.annotation.Valid;
+import com.github.fashionbrot.annotation.Validated;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.net.http.HttpResponse;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +33,6 @@ public class UserService implements UserServiceInterface {
         try {
             User user = userMapper.toEntity(userDTO);
             User savedUser = userRepository.save(user);
-            userMapper.toDto(savedUser);
             return ResponseEntity.ok(savedUser);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("An error occurred while saving the user.");
