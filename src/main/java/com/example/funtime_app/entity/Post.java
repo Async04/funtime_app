@@ -33,7 +33,9 @@ public class Post {
     private Integer views;
 
     @OneToOne
-    private Rate rate;
+    private List<Rate> rates;
+
+    private List<CategoryTag> tags;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
