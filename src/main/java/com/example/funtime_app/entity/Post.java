@@ -32,9 +32,10 @@ public class Post {
 
     private Integer views;
 
-    @OneToOne
+    @OneToMany
     private List<Rate> rates;
 
+    @OneToMany
     private List<CategoryTag> tags;
 
     @CreationTimestamp
