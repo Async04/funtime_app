@@ -21,11 +21,7 @@ public class Rate {
     @ManyToOne(fetch = FetchType.LAZY)
     private User ratedBy;
 
-    @ManyToOne
-    private Post post;
-
     private Integer markValue;
-    @CreationTimestamp
-    private LocalDateTime markedAt;
+
 
 }

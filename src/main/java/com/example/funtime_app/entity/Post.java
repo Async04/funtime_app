@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -30,6 +31,9 @@ public class Post {
     private Attachment attachment;
 
     private Integer views;
+
+    @OneToOne
+    private Rate rate;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
