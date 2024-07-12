@@ -6,6 +6,7 @@ import com.example.funtime_app.interfaces.PostServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,4 +27,24 @@ public class PostController {
     ){
         return postServiceInterface.getPosts(page,size);
     }
+
+    @GetMapping("/popular")
+    public ResponseEntity<?> getPopularPosts(){
+        return postServiceInterface.getPopularPosts();
+    }
+
+    @GetMapping("/new")
+    public ResponseEntity<?> getNewPosts(){
+        return postServiceInterface.getNewPosts();
+    }
+
+     @GetMapping("/trendy")
+    public ResponseEntity<?> getTrendyPosts(){
+        return postServiceInterface.getTrendyPosts();
+    }
+
+
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.funtime_app.services;
 
+import com.example.funtime_app.dto.PopularNewTrendyPostDto;
 import com.example.funtime_app.dto.PostDto;
 import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.Category;
@@ -7,6 +8,7 @@ import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.PostServiceInterface;
 import com.example.funtime_app.mappers.PostMapper;
+import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
 import com.example.funtime_app.repository.CategoryRepository;
 import com.example.funtime_app.repository.PostRepository;
 import com.example.funtime_app.repository.UserRepository;
@@ -63,5 +65,45 @@ public class PostService implements PostServiceInterface {
     public Page<Post> getPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
         return postRepository.findAll(pageable);
+    }
+
+    @Override
+    public ResponseEntity<?> getPopularPosts() {
+
+        try {
+            List<PopularNewTrendyPostProjection> posts =
+                    postRepository.getPopularPosts();
+            return ResponseEntity.ok(posts);
+        }
+        catch (Exception e){
+            System.out.println(e);
+            System.out.println("DDDDDDDD");
+            e.printStackTrace();
+           return ResponseEntity.status(500).body(new RuntimeException("not found"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getNewPosts() {
+        try {
+            List<PopularNewTrendyPostProjection> posts =
+                    postRepository.getNewPosts();
+            return ResponseEntity.ok(posts);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body(new RuntimeException("not found"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getTrendyPosts() {
+        try {
+            List<PopularNewTrendyPostProjection> posts =
+                    postRepository.getTrendyPosts();
+            return ResponseEntity.ok(posts);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body(new RuntimeException("not found"));
+        }
     }
 }
