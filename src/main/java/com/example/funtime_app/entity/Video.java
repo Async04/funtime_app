@@ -23,6 +23,8 @@ public class Video {
 
     private String title;
     private String description;
+    @ManyToOne
+    private User user;
 
     @ManyToOne
     private Category category;
