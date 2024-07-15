@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -36,15 +37,16 @@ public class PostService implements PostServiceInterface {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+
     @Transactional
     @Override
     public HttpEntity<?> savePost(@Valid PostDto postDto) {
         MultipartFile file = postDto.file();
-        Attachment attachment= attachmentService.saveAttachment(file);
-        Optional<User> userOptional= userRepository.findById(postDto.userId());
+        Attachment attachment = attachmentService.saveAttachment(file);
+        Optional<User> userOptional = userRepository.findById(postDto.userId());
         Optional<Category> categoryOptional = categoryRepository.findById(postDto.categoryId());
-        if (attachment!=null&& userOptional.isPresent() && categoryOptional.isPresent()){
-            Post post=Post.builder()
+        if (attachment != null && userOptional.isPresent() && categoryOptional.isPresent()) {
+            Post post = Post.builder()
                     .title(postDto.title())
                     .description(postDto.description())
                     .category(categoryOptional.get())
@@ -74,12 +76,11 @@ public class PostService implements PostServiceInterface {
             List<PopularNewTrendyPostProjection> posts =
                     postRepository.getPopularPosts();
             return ResponseEntity.ok(posts);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             System.out.println("DDDDDDDD");
             e.printStackTrace();
-           return ResponseEntity.status(500).body(new RuntimeException("not found"));
+            return ResponseEntity.status(500).body(new RuntimeException("not found"));
         }
     }
 
@@ -89,8 +90,7 @@ public class PostService implements PostServiceInterface {
             List<PopularNewTrendyPostProjection> posts =
                     postRepository.getNewPosts();
             return ResponseEntity.ok(posts);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(500).body(new RuntimeException("not found"));
         }
     }
@@ -101,9 +101,15 @@ public class PostService implements PostServiceInterface {
             List<PopularNewTrendyPostProjection> posts =
                     postRepository.getTrendyPosts();
             return ResponseEntity.ok(posts);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(500).body(new RuntimeException("not found"));
         }
+    }
+
+    @Override
+    public ResponseEntity<?> getByCategoryId(UUID categoryId) {
+
+     return    postRepository.getByCategoryId(categoryId);
+
     }
 }

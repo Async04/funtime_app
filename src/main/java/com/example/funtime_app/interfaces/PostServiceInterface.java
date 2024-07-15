@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface PostServiceInterface {
 
@@ -20,4 +21,5 @@ public interface PostServiceInterface {
 
     ResponseEntity<?> getTrendyPosts();
 
+    ResponseEntity<?> getByCategoryId(UUID categoryId);
 }

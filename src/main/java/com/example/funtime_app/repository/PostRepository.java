@@ -6,6 +6,7 @@ import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -72,4 +73,6 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             
                 """)
     List<PopularNewTrendyPostProjection> getNewPosts();
+
+    ResponseEntity<?> getByCategoryId(UUID categoryId);
 }

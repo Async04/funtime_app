@@ -19,4 +19,11 @@ public class CategoryController {
     public HttpEntity<?> getAllTagsByCategoryId(@PathVariable String id){
         return categoryServiceInterface.getAllTagsByCategory(id);
     }
+
+    @GetMapping
+    public List<HttpEntity<?>> getAllCategory(){
+        return categoryServiceInterface.getAllCategories();
+    }
+
+
 }

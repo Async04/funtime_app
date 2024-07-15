@@ -9,6 +9,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -41,6 +43,12 @@ public class PostController {
      @GetMapping("/trendy")
     public ResponseEntity<?> getTrendyPosts(){
         return postServiceInterface.getTrendyPosts();
+    }
+
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<?> getPostByCategoryId(@PathVariable UUID categoryId){
+        return postServiceInterface.getByCategoryId(categoryId);
     }
 
 
