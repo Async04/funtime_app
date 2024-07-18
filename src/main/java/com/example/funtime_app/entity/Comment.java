@@ -27,9 +27,6 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private User commentedBy;
 
-    @OneToMany
-    private List<Comment> replies;
-
     private UUID parentCommentId;
 
     private LocalDateTime createdAt;

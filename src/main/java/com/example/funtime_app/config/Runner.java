@@ -1,9 +1,11 @@
 package com.example.funtime_app.config;
 
 import com.example.funtime_app.entity.*;
+import com.example.funtime_app.entity.enums.RoleName;
 import com.example.funtime_app.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
@@ -23,23 +25,52 @@ public class Runner implements CommandLineRunner {
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
     private final VideoRepository videoRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
     @Override
     public void run(String... args) throws Exception {
 
+
+//        Role role1 = Role.builder()
+//                .roleName(RoleName.ROLE_ADMIN)
+//                .build();
+//        Role role2 = Role.builder()
+//                .roleName(RoleName.ROLE_USER)
+//                .build();
+//        roleRepository.save(role1);
+//        roleRepository.save(role2);
+//
+//        User user1 = User.builder()
+//                .username("user")
+//                .roles(List.of(role2))
+//                .password(passwordEncoder.encode("123"))
+//                .build();
+//          User user2 = User.builder()
+//                .username("admin")
+//                  .roles(List.of(role1))
+//                .password(passwordEncoder.encode("123"))
+//                .build();
+//
+//          userRepository.save(user1);
+//          userRepository.save(user2);
+
+
+
+
         // byte[] bytes1 = Files.readAllBytes(Path.of("com/example/funtime_app/config/rasm.jpg"));
 
-       Path path = Paths.get("src/main/java/com/example/funtime_app/config/", "video.mp4");
-                byte[] bytes = Files.readAllBytes(path);
-
-        Attachment attachment = Attachment.builder()
-                .content(bytes)
-                .contentType("mp4")
-                .build();
-        attachmentRepository.save(attachment);
-        Video video = Video.builder()
-               .attachment(attachment)
-               .build();
-        videoRepository.save(video);
+//       Path path = Paths.get("src/main/java/com/example/funtime_app/config/", "video.mp4");
+//                byte[] bytes = Files.readAllBytes(path);
+//
+//        Attachment attachment = Attachment.builder()
+//                .content(bytes)
+//                .contentType("mp4")
+//                .build();
+//        attachmentRepository.save(attachment);
+//        Video video = Video.builder()
+//               .attachment(attachment)
+//               .build();
+//        videoRepository.save(video);
 
 //        byte[] bytes = Files.readAllBytes(path);
 //        Random random = new Random();

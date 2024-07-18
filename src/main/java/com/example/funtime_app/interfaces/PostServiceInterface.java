@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface PostServiceInterface {
@@ -15,7 +14,7 @@ public interface PostServiceInterface {
 
     Page<Post> getPosts(int page, int size);
 
-    ResponseEntity<?> getPopularPosts();
+    ResponseEntity<?> getPopularPosts(int page, int size);
 
     ResponseEntity<?> getNewPosts();
 

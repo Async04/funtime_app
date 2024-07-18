@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -31,8 +32,12 @@ public class PostController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<?> getPopularPosts(){
-        return postServiceInterface.getPopularPosts();
+    @PreAuthorize("ROLE_USER")
+    public ResponseEntity<?> getPopularPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return postServiceInterface.getPopularPosts(page, size);
     }
 
     @GetMapping("/new")

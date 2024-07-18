@@ -12,6 +12,11 @@ public class AttachmentService {
     private final AttachmentRepository attachmentRepository;
     @SneakyThrows
     public Attachment saveAttachment(MultipartFile file) {
+
+        if (file==null){
+            throw new RuntimeException("File can not be null");
+        }
+
         Attachment attachment=Attachment.builder()
                 .content(file.getBytes())
                 .contentType(file.getContentType())

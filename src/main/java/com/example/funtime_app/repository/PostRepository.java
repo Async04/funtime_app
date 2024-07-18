@@ -1,7 +1,5 @@
 package com.example.funtime_app.repository;
 
-
-import com.example.funtime_app.dto.PopularNewTrendyPostDto;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                
 
                 """)
-    List<PopularNewTrendyPostProjection> getPopularPosts();
+    List<PopularNewTrendyPostProjection> getPopularPosts(int page, int size);
 
 
     @Query(nativeQuery = true, value = """
