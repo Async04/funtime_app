@@ -26,7 +26,8 @@ public class SecurityConfig {
 
         security.authorizeHttpRequests(m->{
             m.requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers("/api/post/popular").hasRole("ADMIN")
+                    .requestMatchers("/api/posts/new").hasRole("ADMIN")
+                    .requestMatchers("/api/posts/popular").hasRole("USER")
                     .anyRequest()
                     .authenticated();
         });

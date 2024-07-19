@@ -1,5 +1,8 @@
 package com.example.funtime_app.security;
 
+import com.example.funtime_app.entity.Role;
+import com.example.funtime_app.entity.User;
+import com.example.funtime_app.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -23,6 +26,9 @@ import java.util.stream.Collectors;
 public class JwtUtil {
 
     private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+
+
     public String generateToken(String username) {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -30,7 +36,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuer("funn_app")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*30))
                 .signWith(getSignKey())
                 .claim("roles", userDetails.getAuthorities())
                 .compact();
@@ -53,24 +59,28 @@ public class JwtUtil {
         return claims.getSubject();
 
     }
-    public List<GrantedAuthority> grantedAuthorities(String token){
+    public List<Role> grantedAuthorities(String token){
+
         Claims claims = getClaims(token);
+        String username = claims.getSubject();
+        User byUsername = userRepository.findByUsername(username);
+        return  byUsername.getRoles();
 
-//        String roles = claims.get("roles", String.class);
-//        System.out.println();
-//        String[] split = roles.split(",");
-//        List<SimpleGrantedAuthority> list = Arrays.stream(split).map(SimpleGrantedAuthority::new).toList();
-//        return list;
-
-        List<LinkedHashMap<String, Object>> rolesMap = (List<LinkedHashMap<String, Object>>) claims.get("roles");
-        List<String> roles = rolesMap.stream()
-                .map(roleMap -> (String) roleMap.get("authority"))
-                .toList();
-        List<GrantedAuthority> collect = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-        System.out.println(collect);
-        return collect;
+////        String roles = claims.get("roles", String.class);
+////        System.out.println();
+////        String[] split = roles.split(",");
+////        List<SimpleGrantedAuthority> list = Arrays.stream(split).map(SimpleGrantedAuthority::new).toList();
+////        return list;
+//
+//        List<LinkedHashMap<String, Object>> rolesMap = (List<LinkedHashMap<String, Object>>) claims.get("roles");
+//        List<String> roles = rolesMap.stream()
+//                .map(roleMap -> (String) roleMap.get("authority"))
+//                .toList();
+//        List<GrantedAuthority> collect = roles.stream()
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+//        System.out.println(collect);
+//        return collect;
     }
     private Claims getClaims(String token) {
         return Jwts.parserBuilder()
@@ -78,5 +88,19 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String generateRefreshToken(String username) {
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuer("funn_app")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*24*7))
+                .signWith(getSignKey())
+                .claim("roles", userDetails.getAuthorities())
+                .compact();
+
     }
 }

@@ -1,5 +1,6 @@
 package com.example.funtime_app.security;
 
+import com.example.funtime_app.entity.Role;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,19 +30,17 @@ public class JwtFilter extends OncePerRequestFilter {
         if (authorization!=null && authorization.startsWith("Bearer")){
             String token = authorization.substring(7);
             if (jwtUtil.isValid(token)){
-                List<GrantedAuthority> authorities = jwtUtil.grantedAuthorities(token);
+                List<Role> authorities = jwtUtil.grantedAuthorities(token);
                 System.out.println(authorities);
                 var auth = new UsernamePasswordAuthenticationToken(
                 jwtUtil.getUsername(token), null,
                         authorities
                 );
                 SecurityContextHolder.getContext().setAuthentication(auth);
-                filterChain.doFilter(request, response);
             }
         }
-        else{
             filterChain.doFilter(request, response);
-        }
+
 
     }
 }

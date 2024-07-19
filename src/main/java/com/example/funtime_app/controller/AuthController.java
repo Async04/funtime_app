@@ -1,6 +1,7 @@
 package com.example.funtime_app.controller;
 
 import com.example.funtime_app.dto.LoginDto;
+import com.example.funtime_app.dto.TokenResponse;
 import com.example.funtime_app.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,14 @@ public class AuthController {
         try {
             var auth = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
             authenticationManager.authenticate(auth);
-            String token = jwtUtil.generateToken(loginDto.getUsername());
-            return ResponseEntity.ok(token);
+            String accesToken = "Bearer "+ jwtUtil.generateToken(loginDto.getUsername());
+            String refreshToken = "Bearer "+ jwtUtil.generateRefreshToken(loginDto.getUsername());
+            return ResponseEntity.ok(
+                    new TokenResponse(accesToken, refreshToken)
+            );
         }
         catch (Exception e){
-            return ResponseEntity.status(403).body("bad attamp");
+            return ResponseEntity.status(403).body("bad attampt");
         }
 
     }

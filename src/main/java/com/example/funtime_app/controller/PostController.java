@@ -32,7 +32,6 @@ public class PostController {
     }
 
     @GetMapping("/popular")
-    @PreAuthorize("ROLE_USER")
     public ResponseEntity<?> getPopularPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size

@@ -1,5 +1,6 @@
 package com.example.funtime_app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,6 +29,7 @@ public class User implements UserDetails {
     private String lastName;
     private String username;
     private String email;
+    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
