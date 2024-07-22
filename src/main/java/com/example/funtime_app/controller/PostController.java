@@ -40,23 +40,35 @@ public class PostController {
     }
 
     @GetMapping("/new")
-    public ResponseEntity<?> getNewPosts(){
-        return postServiceInterface.getNewPosts();
+    public ResponseEntity<?> getNewPosts(
+
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+
+    ){
+        return postServiceInterface.getNewPosts(page, size);
     }
 
-     @GetMapping("/trendy")
-    public ResponseEntity<?> getTrendyPosts(){
-        return postServiceInterface.getTrendyPosts();
+    @GetMapping("/trendy")
+    public ResponseEntity<?> getTrendyPosts(
+
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+
+     ){
+        return postServiceInterface.getTrendyPosts(page, size);
     }
+    @GetMapping("/top")
+    public ResponseEntity<?> getTopPosts(
 
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
 
+     ){
+        return postServiceInterface.getTopPosts(page, size);
+    }
     @GetMapping("/{categoryId}")
     public ResponseEntity<?> getPostByCategoryId(@PathVariable UUID categoryId){
         return postServiceInterface.getByCategoryId(categoryId);
     }
-
-
-
-
-
 }

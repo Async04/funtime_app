@@ -81,10 +81,10 @@ public class PostService implements PostServiceInterface {
     }
 
     @Override
-    public ResponseEntity<?> getNewPosts() {
+    public ResponseEntity<?> getNewPosts(int page, int size) {
         try {
             List<PopularNewTrendyPostProjection> posts =
-                    postRepository.getNewPosts();
+                    postRepository.getNewPosts((page+1)*size, size);
             return ResponseEntity.ok(posts);
         }
         catch (Exception e){
@@ -93,16 +93,34 @@ public class PostService implements PostServiceInterface {
     }
 
     @Override
-    public ResponseEntity<?> getTrendyPosts() {
+    public ResponseEntity<?> getTrendyPosts(int page, int size) {
         try {
+
+
             List<PopularNewTrendyPostProjection> posts =
-                    postRepository.getTrendyPosts();
+                    postRepository.getTrendyPosts((page+1)*size, size);
             return ResponseEntity.ok(posts);
         }
         catch (Exception e){
             return ResponseEntity.status(500).body(new RuntimeException("not found"));
         }
     }
+
+    @Override
+    public ResponseEntity<?> getTopPosts(int page, int size) {
+
+        try {
+            List<PopularNewTrendyPostProjection> posts =
+                    postRepository.getTopPosts((page+1)*size, size);
+            return ResponseEntity.ok(posts);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body(new RuntimeException("not found"));
+        }
+
+
+    }
+
 
     @Override
     public ResponseEntity<?> getByCategoryId(UUID categoryId) {

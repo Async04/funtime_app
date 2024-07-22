@@ -158,6 +158,25 @@ public class Runner implements CommandLineRunner {
 //
 //        }
 
+//        Path path = Paths.get("src/main/java/com/example/funtime_app/config/", "video.mp4");
+//        byte[] bytes = Files.readAllBytes(path);
+//        List<User> users = userRepository.findAll();
+//
+//        for (int i = 0; i < 1000; i++) {
+//
+//        Attachment attachment = Attachment.builder()
+//                .content(bytes)
+//                .contentType("mp4")
+//                .build();
+//        attachmentRepository.save(attachment);
+//        Video video = Video.builder()
+//               .attachment(attachment)
+//                .user(users.get(new Random().nextInt(1, 30)))
+//               .build();
+//        videoRepository.save(video);
+//
+//        }
+
 
 
 

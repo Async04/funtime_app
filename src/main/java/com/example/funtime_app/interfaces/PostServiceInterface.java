@@ -16,9 +16,10 @@ public interface PostServiceInterface {
 
     ResponseEntity<?> getPopularPosts(int page, int size);
 
-    ResponseEntity<?> getNewPosts();
+    ResponseEntity<?> getNewPosts(int page, int size);
 
-    ResponseEntity<?> getTrendyPosts();
+    ResponseEntity<?> getTrendyPosts(int page, int size);
+    ResponseEntity<?> getTopPosts(int page, int size);
 
     ResponseEntity<?> getByCategoryId(UUID categoryId);
 }
