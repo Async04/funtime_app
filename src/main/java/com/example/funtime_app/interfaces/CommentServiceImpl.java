@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Service
+
 public interface CommentServiceImpl {
     HttpEntity<?> getComments(UUID postId);
     HttpEntity<?> saveComment(CommentDto commentDto, UUID parentCommentId);

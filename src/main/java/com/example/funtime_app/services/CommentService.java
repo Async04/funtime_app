@@ -36,7 +36,7 @@ public class CommentService implements CommentServiceImpl {
 
     @Override
     public HttpEntity<?> getChildComments(UUID parentCommentId) {
-        List<Comment> comments = commentRepository.findAllParentCommentId(parentCommentId);
+        List<Comment> comments = commentRepository.findAllByParentCommentId(parentCommentId);
         return getCommentDtos(comments);
     }
 
