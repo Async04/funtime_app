@@ -71,4 +71,15 @@ public class PostController {
     public ResponseEntity<?> getPostByCategoryId(@PathVariable UUID categoryId){
         return postServiceInterface.getByCategoryId(categoryId);
     }
+
+
+    @GetMapping("/search")
+    public HttpEntity<?> search(String search){
+        return postServiceInterface.getSearchedPosts(search);
+    }
+
+
+
+
+
 }

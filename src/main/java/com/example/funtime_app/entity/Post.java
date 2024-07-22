@@ -34,8 +34,6 @@ public class Post {
 
     private Integer views;
 
-    @OneToMany
-    private List<Rate> rates;
 
     @OneToMany
     private List<CategoryTag> tags;

@@ -127,4 +127,16 @@ public class PostService implements PostServiceInterface {
 
         return null;
     }
+
+    @Override
+    public HttpEntity<?> getSearchedPosts(String search) {
+        try {
+            List<Post> posts =
+                    postRepository.findAllByTitleContainingIgnoreCase(search);
+            return ResponseEntity.ok(posts);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body(new RuntimeException("not found"));
+        }
+    }
 }

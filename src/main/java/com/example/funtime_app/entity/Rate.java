@@ -1,8 +1,7 @@
 package com.example.funtime_app.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -12,6 +11,9 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "rate")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Rate {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -20,6 +22,10 @@ public class Rate {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User ratedBy;
+
+    @ManyToOne
+    private Post post;
+
 
     private Integer markValue;
 

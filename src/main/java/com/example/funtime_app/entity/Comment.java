@@ -2,6 +2,7 @@ package com.example.funtime_app.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-
     private String body;
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
@@ -27,11 +27,13 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private User commentedBy;
 
+
     private UUID parentCommentId;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-
-
+    @OneToOne
+    private Rate rate;
 
 }

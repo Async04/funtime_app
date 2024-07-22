@@ -1,9 +1,10 @@
 package com.example.funtime_app.dto;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * DTO for {@link com.example.funtime_app.entity.User}
  */
-public record UserDTO(String firstName, String lastName, String username, String email,String password) implements Serializable {
+public record UserDTO(String firstName, String lastName, String username, String email, String password, UUID attachmentId) implements Serializable {
 }

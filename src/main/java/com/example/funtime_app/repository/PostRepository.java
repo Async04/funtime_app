@@ -4,7 +4,6 @@ import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -92,5 +91,12 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             limit :limit offset :offset
             """)
     List<PopularNewTrendyPostProjection> getTopPosts(@Param("offset") int offset, @Param("limit") int limit);
+
+    List<Post> findAllByCategoryId(UUID categoryId);
+
+    @Query("SELECT p FROM Post p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :search, '%'))")
+    List<Post> findAllByTitleContainingIgnoreCase(@Param("search") String search);
+
+
 
 }

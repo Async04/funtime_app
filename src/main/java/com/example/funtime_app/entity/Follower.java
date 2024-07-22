@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Table(name = "follower")
+@Builder
 public class Follower {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
