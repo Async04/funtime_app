@@ -31,28 +31,28 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 
-        Role role1 = Role.builder()
-                .roleName(RoleName.ROLE_ADMIN)
-                .build();
-        Role role2 = Role.builder()
-                .roleName(RoleName.ROLE_USER)
-                .build();
-        roleRepository.save(role1);
-        roleRepository.save(role2);
-
-        User user1 = User.builder()
-                .username("user")
-                .roles(List.of(role2))
-                .password(passwordEncoder.encode("123"))
-                .build();
-          User user2 = User.builder()
-                .username("admin")
-                  .roles(List.of(role1))
-                .password(passwordEncoder.encode("123"))
-                .build();
-
-          userRepository.save(user1);
-          userRepository.save(user2);
+//        Role role1 = Role.builder()
+//                .roleName(RoleName.ROLE_ADMIN)
+//                .build();
+//        Role role2 = Role.builder()
+//                .roleName(RoleName.ROLE_USER)
+//                .build();
+//        roleRepository.save(role1);
+//        roleRepository.save(role2);
+//
+//        User user1 = User.builder()
+//                .username("user")
+//                .roles(List.of(role2))
+//                .password(passwordEncoder.encode("123"))
+//                .build();
+//          User user2 = User.builder()
+//                .username("admin")
+//                  .roles(List.of(role1))
+//                .password(passwordEncoder.encode("123"))
+//                .build();
+//
+//          userRepository.save(user1);
+//          userRepository.save(user2);
 
 
 

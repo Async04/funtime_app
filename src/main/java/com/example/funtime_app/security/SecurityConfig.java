@@ -25,7 +25,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity security, JwtFilter jwtFilter) throws Exception {
 
         security.authorizeHttpRequests(m->{
-            m.requestMatchers("/api/auth/**", "/api/video/**","/swagger-ui/**", "/api/posts/**").permitAll()
+            m.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/api/auth/**").permitAll()
                     .requestMatchers("/api/posts/new").hasRole("ADMIN")
                     .requestMatchers("/api/posts/popular").hasRole("USER")
                     .anyRequest()
