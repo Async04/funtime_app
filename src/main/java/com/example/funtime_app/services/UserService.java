@@ -4,6 +4,7 @@ import com.example.funtime_app.dto.UserDTO;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.UserServiceInterface;
 import com.example.funtime_app.mappers.UserMapper;
+import com.example.funtime_app.projection.UserProfileProjection;
 import com.example.funtime_app.repository.UserRepository;
 import com.github.fashionbrot.annotation.Valid;
 import com.github.fashionbrot.annotation.Validated;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service
@@ -26,6 +29,7 @@ public class UserService implements UserServiceInterface {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+
 
 
 
@@ -39,5 +43,11 @@ public class UserService implements UserServiceInterface {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("An error occurred while saving the user.");
         }
+    }
+
+    @Override
+    public ResponseEntity<?> getUserProfile(UUID userId) {
+        UserProfileProjection userProfile = userRepository.getUserProfile(userId);
+        return ResponseEntity.ok(userProfile);
     }
 }

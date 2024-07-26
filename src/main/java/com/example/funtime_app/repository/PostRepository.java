@@ -99,5 +99,23 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     List<Post> findAllByTitleContainingIgnoreCase(@Param("search") String search);
 
 
+    @Query(nativeQuery = true, value = """
+            SELECT
+                        u.first_name ||' '|| u.last_name as fullname,
+                        TO_CHAR(p.created_at, 'DD.MM.YYYY ') AS date,
+                        p.id AS postId,
+                        p.attachment_id AS postAttachmentId,
+                        p.user_id AS userId,
+                        u.profile_photo_id AS profilePhotoId,
+                        p.title AS title,
+                        p.description AS description
+            FROM posts p
+                     JOIN users u ON p.user_id = u.id
+                     JOIN attachment a ON a.id = p.attachment_id
+            where u.id=:userId
+            ORDER BY  date desc
+            
+            """)
+    List<PopularNewTrendyPostProjection> getAllUserPostsByUserId(@Param(value = "userId") UUID userId);
 
 }

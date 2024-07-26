@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -35,6 +37,11 @@ public class UserController {
         catch (Exception e){
            return ResponseEntity.status(403).body("User not found");
         }
+    }
+
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<?> getUserProfile(@PathVariable UUID userId){
+        return userServiceInterface.getUserProfile(userId);
     }
 
 

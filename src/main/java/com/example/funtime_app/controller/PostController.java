@@ -78,8 +78,8 @@ public class PostController {
         return postServiceInterface.getSearchedPosts(search);
     }
 
-
-
-
-
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserPosts(@PathVariable UUID userId){
+        return postServiceInterface.getUserAllPosts(userId);
+    }
 }

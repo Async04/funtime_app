@@ -24,4 +24,6 @@ public interface PostServiceInterface {
     ResponseEntity<?> getByCategoryId(UUID categoryId);
 
     HttpEntity<?> getSearchedPosts(String search);
+
+    ResponseEntity<?> getUserAllPosts(UUID userId);
 }

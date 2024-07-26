@@ -139,4 +139,13 @@ public class PostService implements PostServiceInterface {
             return ResponseEntity.status(500).body(new RuntimeException("not found"));
         }
     }
+
+    @Override
+    public ResponseEntity<?> getUserAllPosts(UUID userId) {
+
+       List<PopularNewTrendyPostProjection> userPosts =
+               postRepository.getAllUserPostsByUserId(userId);
+       return ResponseEntity.ok(userPosts);
+
+    }
 }
