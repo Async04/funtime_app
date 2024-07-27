@@ -125,7 +125,15 @@ public class PostService implements PostServiceInterface {
     @Override
     public ResponseEntity<?> getByCategoryId(UUID categoryId) {
 
-        return null;
+        try {
+            List<PopularNewTrendyPostProjection> posts = postRepository.getByCategoryId(categoryId);
+
+            return ResponseEntity.ok(posts);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body(new RuntimeException("not found"));
+        }
+
     }
 
     @Override

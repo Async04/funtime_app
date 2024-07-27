@@ -1,5 +1,6 @@
 package com.example.funtime_app.repository;
 
+import com.example.funtime_app.dto.PostDto;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,7 +28,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                    join attachment a on a.id=p.attachment_id
             order by p.views desc limit :limit offset :offset 
                
-
+                                
                 """)
     List<PopularNewTrendyPostProjection> getPopularPosts(@Param("offset") int offset, @Param("limit") int limit);
 
@@ -40,13 +41,13 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                 u.profile_photo_id,
                 p.title,
                 p.description
-            
+                        
                 from posts p
                 join users u on p.user_id=u.id
                 join attachment a on a.id=p.attachment_id
-            
+                        
             order by p.created_at desc limit :limit offset :offset 
-            
+                        
                
 
                 """)
@@ -54,8 +55,8 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @Query(nativeQuery = true, value = """
 
-            
-            
+                        
+                        
             select
                 p.id post_id,
                 p.attachment_id post_attachment_id,
@@ -63,17 +64,32 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                 u.profile_photo_id,
                 p.title,
                 p.description
-            
+                        
                 from posts p
                 join users u on p.user_id=u.id
                 join attachment a on a.id=p.attachment_id
-            
+                        
             order by p.created_at desc , EXTRACT(DAY FROM p.created_at) desc limit :limit offset :offset 
-            
+                        
                 """)
     List<PopularNewTrendyPostProjection> getNewPosts(@Param("offset") int offset, @Param("limit") int limit);
 
-    ResponseEntity<?> getByCategoryId(UUID categoryId);
+    @Query(nativeQuery = true, value = """
+        select
+            p.id post_id,
+            p.attachment_id post_attachment_id,
+            p.user_id,
+            u.profile_photo_id,
+            p.title,
+            p.description
+        from posts p
+        join users u on p.user_id = u.id
+        join attachment a on a.id = p.attachment_id
+        join post_category pc on p.id = pc.post_id
+        where pc.category_id = :categoryId
+        order by p.created_at desc, EXTRACT(DAY FROM p.created_at) desc
+""")
+    List<PopularNewTrendyPostProjection> getByCategoryId(@Param("categoryId") UUID categoryId);
 
 
     @Query(nativeQuery = true, value = """
@@ -88,7 +104,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                      JOIN users u ON p.user_id = u.id
                      JOIN attachment a ON a.id = p.attachment_id
             ORDER BY (SELECT COUNT(*) FROM follower f WHERE f.follower_id = u.id) DESC
-            
+                        
             limit :limit offset :offset
             """)
     List<PopularNewTrendyPostProjection> getTopPosts(@Param("offset") int offset, @Param("limit") int limit);
@@ -114,7 +130,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                      JOIN attachment a ON a.id = p.attachment_id
             where u.id=:userId
             ORDER BY  date desc
-            
+                        
             """)
     List<PopularNewTrendyPostProjection> getAllUserPostsByUserId(@Param(value = "userId") UUID userId);
 
