@@ -10,4 +10,6 @@ public interface UserServiceInterface {
 
     HttpEntity<?> saveUser(UserDTO userDTO);
     ResponseEntity<?> getUserProfile(UUID userId);
+
+    HttpEntity<?> checkOtp(String otpNumber, String email);
 }

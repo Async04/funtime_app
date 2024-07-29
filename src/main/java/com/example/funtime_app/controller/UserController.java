@@ -19,31 +19,34 @@ import java.util.UUID;
 public class UserController {
     private final UserServiceInterface userServiceInterface;
     private final UserRepository userRepository;
+
     @CrossOrigin
     @PostMapping("/authorize")
-    public HttpEntity<?> login(@RequestBody UserDTO userDTO){
+    public HttpEntity<?> login(@RequestBody UserDTO userDTO) {
+
         return userServiceInterface.saveUser(userDTO);
+    }
+    @PostMapping("/otp-check/{otpNumber}")
+    public HttpEntity<?> checkOtp(@PathVariable String otpNumber, @RequestParam String email) {
+        return userServiceInterface.checkOtp(otpNumber, email);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getMe(){
+    public ResponseEntity<?> getMe() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             User byUsername = userRepository.findByUsername(username);
             return ResponseEntity.ok(byUsername);
-        }
-
-        catch (Exception e){
-           return ResponseEntity.status(403).body("User not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(403).body("User not found");
         }
     }
 
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<?> getUserProfile(@PathVariable UUID userId){
+    public ResponseEntity<?> getUserProfile(@PathVariable UUID userId) {
         return userServiceInterface.getUserProfile(userId);
     }
-
 
 
 }
