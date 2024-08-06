@@ -2,11 +2,14 @@ package com.example.funtime_app.repository;
 
 
 import com.example.funtime_app.entity.User;
+import com.example.funtime_app.projection.UserEditProjection;
 import com.example.funtime_app.projection.UserProfileProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
@@ -38,4 +41,15 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             
             """)
     UserProfileProjection getUserProfile(@Param(value = "userId") UUID userId);
+
+
+    @Query(nativeQuery = true, value = """
+            select
+                u.username,
+                u.first_name,
+                u.last_name,
+                u.email
+                from users u where u.id =:userId
+            """)
+    List<UserEditProjection> getUserEditData(@Param(value = "userId") UUID userId);
 }
