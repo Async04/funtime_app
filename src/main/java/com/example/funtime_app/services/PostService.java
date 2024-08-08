@@ -1,6 +1,6 @@
 package com.example.funtime_app.services;
 
-import com.example.funtime_app.dto.PostDto;
+import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.Category;
 import com.example.funtime_app.entity.Post;
@@ -38,7 +38,7 @@ public class PostService implements PostServiceInterface {
     private final PostMapper postMapper;
     @Transactional
     @Override
-    public HttpEntity<?> savePost(@Valid PostDto postDto) {
+    public HttpEntity<?> savePost(@Valid PostDTO postDto) {
         MultipartFile file = postDto.file();
         Attachment attachment= attachmentService.saveAttachment(file);
         Optional<User> userOptional= userRepository.findById(postDto.userId());
@@ -51,8 +51,8 @@ public class PostService implements PostServiceInterface {
                     .user(userOptional.get())
                     .build();
             Post savedPost = postRepository.save(post);
-            PostDto postDto1 = postMapper.toDto(savedPost);
-            return ResponseEntity.ok(postDto1);
+            PostDTO postDTO1 = postMapper.toDto(savedPost);
+            return ResponseEntity.ok(postDTO1);
         }
         String errorMessage = "Failed to create post. ";
         if (attachment == null) errorMessage += "Attachment could not be saved. ";

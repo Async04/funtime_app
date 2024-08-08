@@ -3,16 +3,17 @@ package com.example.funtime_app.dto;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
  * DTO for {@link com.example.funtime_app.entity.Comment}
  */
 @Value
-public class CommentDto implements Serializable {
+public class SendCommentDTO implements Serializable {
+    UUID id;
     String body;
-    UUID postId;
-    UUID userId;
-    UUID parentCommentId;
+    UserDTO commentedBy;
+    LocalDateTime createdAt;
     Integer rateMarkValue;
 }

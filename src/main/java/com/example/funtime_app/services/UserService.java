@@ -1,7 +1,7 @@
 package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.UserDTO;
-import com.example.funtime_app.dto.UserEditDto;
+import com.example.funtime_app.dto.UserEditDTO;
 import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.Banner;
 import com.example.funtime_app.entity.User;
@@ -77,7 +77,7 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public ResponseEntity<?> edit(UUID userId, UserEditDto userEditDto) throws IOException {
+    public ResponseEntity<?> edit(UUID userId, UserEditDTO userEditDto) throws IOException {
 
         Optional<User> byId = userRepository.findById(userId);
         System.out.println(userEditDto);

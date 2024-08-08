@@ -1,7 +1,8 @@
 package com.example.funtime_app.services;
 
-import com.example.funtime_app.dto.CommentDto;
-import com.example.funtime_app.dto.SendCommentDto;
+import com.example.funtime_app.dto.CommentDTO;
+
+import com.example.funtime_app.dto.SendCommentDTO;
 import com.example.funtime_app.entity.*;
 import com.example.funtime_app.interfaces.CommentServiceImpl;
 import com.example.funtime_app.mappers.SendCommentMapper;
@@ -43,7 +44,7 @@ public class CommentService implements CommentServiceImpl {
 
 
     @Override
-    public HttpEntity<?> saveComment(CommentDto commentDto, UUID parentCommentId) {
+    public HttpEntity<?> saveComment(CommentDTO commentDto, UUID parentCommentId) {
         try {
             Optional<Post> postOptional = postRepository.findById(commentDto.getPostId());
             Comment comment = null;
@@ -79,11 +80,11 @@ public class CommentService implements CommentServiceImpl {
         }
     }
 
-    private ResponseEntity<List<SendCommentDto>> getCommentDtos(List<Comment> comments) {
-        List<SendCommentDto> commentDtos = new ArrayList<>();
+    private ResponseEntity<List<SendCommentDTO>> getCommentDtos(List<Comment> comments) {
+        List<SendCommentDTO> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {
             if (comment.getParentCommentId() == null) {
-                SendCommentDto sendCommentDto = sendCommentMapper.toDto(comment);
+                SendCommentDTO sendCommentDto = sendCommentMapper.toDto(comment);
                 commentDtos.add(sendCommentDto);
             }
         }

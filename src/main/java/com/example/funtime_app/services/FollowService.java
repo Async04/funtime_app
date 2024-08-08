@@ -1,6 +1,6 @@
 package com.example.funtime_app.services;
 
-import com.example.funtime_app.dto.FollowerDto;
+import com.example.funtime_app.dto.FollowerDTO;
 import com.example.funtime_app.entity.Follower;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.FollowServiceImpl;
@@ -21,7 +21,7 @@ public class FollowService implements FollowServiceImpl {
     private final UserRepository userRepository;
 
     @Override
-    public HttpEntity<?> follow(FollowerDto followerDto) {
+    public HttpEntity<?> follow(FollowerDTO followerDto) {
         Optional<User> followedByOpt = userRepository.findById(followerDto.getFollowedById());
         Optional<User> followerOpt = userRepository.findById(followerDto.getFollowerId());
         if(followerOpt.isPresent() && followerOpt.isPresent()){

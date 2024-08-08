@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LatestVideoDto {
+public class LatestVideoDTO {
 
     private UUID videoId;
     private UUID videoAttachmentId;

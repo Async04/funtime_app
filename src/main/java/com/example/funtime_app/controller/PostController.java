@@ -1,13 +1,12 @@
 package com.example.funtime_app.controller;
 
-import com.example.funtime_app.dto.PostDto;
+import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.interfaces.PostServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -19,7 +18,7 @@ public class PostController {
     private final PostServiceInterface postServiceInterface;
 
     @PostMapping("/save")
-    public HttpEntity<?> saveNewPost(PostDto postDto){
+    public HttpEntity<?> saveNewPost(PostDTO postDto){
         return postServiceInterface.savePost(postDto);
     }
 

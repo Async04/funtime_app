@@ -1,6 +1,5 @@
 package com.example.funtime_app.services;
 
-import com.example.funtime_app.dto.LatestVideoDto;
 import com.example.funtime_app.interfaces.VideoServiceInterface;
 import com.example.funtime_app.projection.LatestVideoProjection;
 import com.example.funtime_app.repository.VideoRepository;

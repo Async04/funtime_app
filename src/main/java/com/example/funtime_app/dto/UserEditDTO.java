@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Builder
 @Data
-public class UserEditDto {
+public class UserEditDTO {
 
     @NotBlank
     private String firstName;

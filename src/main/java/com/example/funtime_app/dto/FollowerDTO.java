@@ -9,7 +9,7 @@ import java.util.UUID;
  * DTO for {@link com.example.funtime_app.entity.Follower}
  */
 @Value
-public class FollowerDto implements Serializable {
+public class FollowerDTO implements Serializable {
     UUID followerId;
     UUID followedById;
 }

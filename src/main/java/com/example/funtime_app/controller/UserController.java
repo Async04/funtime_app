@@ -1,10 +1,9 @@
 package com.example.funtime_app.controller;
 
 import com.example.funtime_app.dto.UserDTO;
-import com.example.funtime_app.dto.UserEditDto;
+import com.example.funtime_app.dto.UserEditDTO;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.UserServiceInterface;
-import com.example.funtime_app.projection.UserEditProjection;
 import com.example.funtime_app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -14,7 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -53,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/edit/{userId}")
-    public void editProfile(@PathVariable UUID userId, @RequestBody UserEditDto userEditDto) throws IOException {
+    public void editProfile(@PathVariable UUID userId, @RequestBody UserEditDTO userEditDto) throws IOException {
         userServiceInterface.edit(userId, userEditDto);
     }
 

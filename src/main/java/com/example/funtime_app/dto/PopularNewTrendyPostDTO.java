@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Data
-public class PopularNewTrendyPostDto {
+public class PopularNewTrendyPostDTO {
 
     private UUID post_id;
     private UUID post_attachment_id;

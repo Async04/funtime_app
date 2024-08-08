@@ -1,6 +1,6 @@
 package com.example.funtime_app.controller;
 
-import com.example.funtime_app.dto.LoginDto;
+import com.example.funtime_app.dto.LoginDTO;
 import com.example.funtime_app.dto.TokenResponse;
 import com.example.funtime_app.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +22,15 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<?> login(@RequestBody LoginDTO loginDto){
 
         try {
             var auth = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
             authenticationManager.authenticate(auth);
-            String accesToken = "Bearer "+ jwtUtil.generateToken(loginDto.getUsername());
+            String accessToken = "Bearer "+ jwtUtil.generateToken(loginDto.getUsername());
             String refreshToken = "Bearer "+ jwtUtil.generateRefreshToken(loginDto.getUsername());
             return ResponseEntity.ok(
-                    new TokenResponse(accesToken, refreshToken)
+                    new TokenResponse(accessToken, refreshToken)
             );
         }
         catch (Exception e){

@@ -1,6 +1,5 @@
 package com.example.funtime_app.repository;
 
-import com.example.funtime_app.dto.LatestVideoDto;
 import com.example.funtime_app.entity.Video;
 import com.example.funtime_app.projection.LatestVideoProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
