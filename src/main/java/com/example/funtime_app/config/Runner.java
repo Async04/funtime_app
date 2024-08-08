@@ -27,38 +27,60 @@ public class Runner implements CommandLineRunner {
     private final VideoRepository videoRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BannerRepository bannerRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
 
-        Role role1 = Role.builder()
-                .roleName(RoleName.ROLE_ADMIN)
-                .build();
-        Role role2 = Role.builder()
-                .roleName(RoleName.ROLE_USER)
-                .build();
-        roleRepository.save(role1);
-        roleRepository.save(role2);
+//        Role role1 = Role.builder()
+//                .roleName(RoleName.ROLE_ADMIN)
+//                .build();
+//        Role role2 = Role.builder()
+//                .roleName(RoleName.ROLE_USER)
+//                .build();
+//        roleRepository.save(role1);
+//        roleRepository.save(role2);
+//
+//        byte[] bytes = Files.readAllBytes(Path.of("src/main/java/com/example/funtime_app/config/rasm.jpg"));
+//        Attachment attachment = Attachment.builder()
+//                .content(bytes)
+//                .contentType("png")
+//                .build();
+//        attachmentRepository.save(attachment);
+//
+//
+//
+//        User user1 = User.builder()
+//                .username("user")
+//                .roles(List.of(role2))
+//                .profilePhoto(attachment)
+//                .firstName("Ali")
+//                .lastName("Alijon")
+//                .email("samandartoyirov@gmail.com")
+//                .password(passwordEncoder.encode("123"))
+//                .build();
+//
+//
+//
+//          User user2 = User.builder()
+//                .username("admin")
+//                  .roles(List.of(role1))
+//                .password(passwordEncoder.encode("123"))
+//                .build();
+//
+//          userRepository.save(user1);
+//          userRepository.save(user2);
+//
+//        Banner banner = Banner.builder()
+//                .banner(attachment)
+//                .user(user1)
+//                .build();
+//        bannerRepository.save(banner);
 
-        User user1 = User.builder()
-                .username("user")
-                .roles(List.of(role2))
-                .password(passwordEncoder.encode("123"))
-                .build();
-          User user2 = User.builder()
-                .username("admin")
-                  .roles(List.of(role1))
-                .password(passwordEncoder.encode("123"))
-                .build();
 
-          userRepository.save(user1);
-          userRepository.save(user2);
-
-
-
-
-        // byte[] bytes1 = Files.readAllBytes(Path.of("com/example/funtime_app/config/rasm.jpg"));
-
+//         byte[] bytes1 = Files.readAllBytes(Path.of("com/example/funtime_app/config/rasm.jpg"));
+//
 //       Path path = Paths.get("src/main/java/com/example/funtime_app/config/", "video.mp4");
 //                byte[] bytes = Files.readAllBytes(path);
 //
@@ -71,19 +93,19 @@ public class Runner implements CommandLineRunner {
 //               .attachment(attachment)
 //               .build();
 //        videoRepository.save(video);
-
-//        byte[] bytes = Files.readAllBytes(path);
+//
+//        byte[] bytes2 = Files.readAllBytes(path);
 //        Random random = new Random();
 //
 //
 //        for (int i = 0; i < 2000; i++) {
 //
-//            Attachment attachment = Attachment.builder()
+//            Attachment attachment1 = Attachment.builder()
 //                    .contentType("jpeg")
-//                    .content(bytes)
+//                    .content(bytes2)
 //                    .build();
 //
-//            attachmentRepository.save(attachment);
+//            attachmentRepository.save(attachment1);
 //
 //            User user = User.builder()
 //                    .email("salom"+i+"@gmail.com")
@@ -113,19 +135,19 @@ public class Runner implements CommandLineRunner {
 //
 //        for (int i = 0; i < 10; i++) {
 //
-//            Attachment attachment = Attachment.builder()
+//            Attachment attachment2 = Attachment.builder()
 //                    .content(bytes)
 //                    .contentType("jpeg")
 //                    .build();
 //
-//            attachmentRepository.save(attachment);
+//            attachmentRepository.save(attachment2);
 //
 //            Category category = Category.builder()
 //                    .name("Category"+i)
 //                    .tags(List.of(
 //                            tags.get(random.nextInt(1,49))
 //                            ))
-//                    .attachment(attachment)
+//                    .attachment(attachment2)
 //                    .build();
 //
 //            categoryRepository.save(category);
@@ -137,15 +159,15 @@ public class Runner implements CommandLineRunner {
 //
 //        for (int i = 0; i < 10000; i++) {
 //
-//            Attachment attachment = Attachment.builder()
+//            Attachment attachment3 = Attachment.builder()
 //                    .content(bytes)
 //                    .contentType("jpeg")
 //                    .build();
 //
-//            attachmentRepository.save(attachment);
+//            attachmentRepository.save(attachment3);
 //
 //            Post post = Post.builder()
-//                    .attachment(attachment)
+//                    .attachment(attachment3)
 //                    .description("Description "+i)
 //                    .title("Title "+i)
 //                    .user(users.get(random.nextInt(1, 2000)))
@@ -157,20 +179,20 @@ public class Runner implements CommandLineRunner {
 //            postRepository.save(post);
 //
 //        }
-
-//        Path path = Paths.get("src/main/java/com/example/funtime_app/config/", "video.mp4");
-//        byte[] bytes = Files.readAllBytes(path);
+//
+//        Path path1 = Paths.get("src/main/java/com/example/funtime_app/config/", "video.mp4");
+//        byte[] bytes3 = Files.readAllBytes(path1);
 //        List<User> users = userRepository.findAll();
 //
 //        for (int i = 0; i < 1000; i++) {
 //
-//        Attachment attachment = Attachment.builder()
-//                .content(bytes)
+//        Attachment attachment4 = Attachment.builder()
+//                .content(bytes3)
 //                .contentType("mp4")
 //                .build();
-//        attachmentRepository.save(attachment);
+//        attachmentRepository.save(attachment4);
 //        Video video = Video.builder()
-//               .attachment(attachment)
+//               .attachment(attachment4)
 //                .user(users.get(new Random().nextInt(1, 30)))
 //               .build();
 //        videoRepository.save(video);
