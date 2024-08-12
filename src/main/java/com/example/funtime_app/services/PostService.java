@@ -8,6 +8,7 @@ import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.PostServiceInterface;
 import com.example.funtime_app.mappers.PostMapper;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
+import com.example.funtime_app.repository.AttachmentRepository;
 import com.example.funtime_app.repository.CategoryRepository;
 import com.example.funtime_app.repository.PostRepository;
 import com.example.funtime_app.repository.UserRepository;
@@ -36,15 +37,17 @@ public class PostService implements PostServiceInterface {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final AttachmentRepository attachmentRepository;
+
     @Transactional
     @Override
     public HttpEntity<?> savePost(@Valid PostDTO postDto) {
-        MultipartFile file = postDto.file();
-        Attachment attachment= attachmentService.saveAttachment(file);
+        Optional<Attachment> attachment = attachmentRepository.findById(postDto.attachmentId());
         Optional<User> userOptional= userRepository.findById(postDto.userId());
         Optional<Category> categoryOptional = categoryRepository.findById(postDto.categoryId());
-        if (attachment!=null&& userOptional.isPresent() && categoryOptional.isPresent()){
+        if (attachment.isPresent() && userOptional.isPresent() && categoryOptional.isPresent()){
             Post post=Post.builder()
+                    .attachment(attachment.get())
                     .title(postDto.title())
                     .description(postDto.description())
                     .category(categoryOptional.get())
@@ -121,10 +124,8 @@ public class PostService implements PostServiceInterface {
 
     }
 
-
     @Override
-    public ResponseEntity<?> getByCategoryId(UUID categoryId) {
-
+    public HttpEntity<?> getByCategoryId(UUID categoryId) {
         try {
             List<PopularNewTrendyPostProjection> posts = postRepository.getByCategoryId(categoryId);
 
@@ -139,8 +140,7 @@ public class PostService implements PostServiceInterface {
     @Override
     public HttpEntity<?> getSearchedPosts(String search) {
         try {
-            List<Post> posts =
-                    postRepository.findAllByTitleContainingIgnoreCase(search);
+            List<Post> posts = postRepository.findAllByTitleContainingIgnoreCase(search);
             return ResponseEntity.ok(posts);
         }
         catch (Exception e){
@@ -156,4 +156,6 @@ public class PostService implements PostServiceInterface {
        return ResponseEntity.ok(userPosts);
 
     }
+
+
 }

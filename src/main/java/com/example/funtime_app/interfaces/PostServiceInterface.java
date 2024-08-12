@@ -1,6 +1,6 @@
 package com.example.funtime_app.interfaces;
 
-import com.example.funtime_app.dto.PostDTO;
+import com.example.funtime_app.dto.PostDto;
 import com.example.funtime_app.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface PostServiceInterface {
 
-    HttpEntity<?> savePost(PostDTO postDto);
+    HttpEntity<?> savePost(PostDto postDto);
 
     Page<Post> getPosts(int page, int size);
 

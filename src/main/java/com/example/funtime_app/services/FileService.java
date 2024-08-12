@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -29,11 +32,25 @@ public class FileService implements FileServiceImpl {
     @SneakyThrows
     @Override
     public void showVideo(HttpServletResponse response, UUID attachmentId) {
-
         Attachment attachment = attachmentRepository.findById(attachmentId).orElseThrow(RuntimeException::new);
         byte[] content = attachment.getContent();
         response.setContentType("video/mp4");
         response.getOutputStream().write(content);
 
+    }
+
+    @Override
+    public UUID savePhoto(MultipartFile file) {
+        Attachment attachment = new Attachment();
+        byte[] photo;
+        try {
+            photo = file.getBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        attachment.setContent(photo);
+        attachment.setContentType(file.getContentType());
+        Attachment save = attachmentRepository.save(attachment);
+        return save.getId();
     }
 }

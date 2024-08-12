@@ -17,7 +17,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class Runner implements CommandLineRunner {
+public class  Runner implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final CategoryTagRepository categoryTagRepository;
@@ -33,44 +33,44 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 
-//        Role role1 = Role.builder()
-//                .roleName(RoleName.ROLE_ADMIN)
-//                .build();
-//        Role role2 = Role.builder()
-//                .roleName(RoleName.ROLE_USER)
-//                .build();
-//        roleRepository.save(role1);
-//        roleRepository.save(role2);
+        Role role1 = Role.builder()
+                .roleName(RoleName.ROLE_ADMIN)
+                .build();
+        Role role2 = Role.builder()
+                .roleName(RoleName.ROLE_USER)
+                .build();
+        roleRepository.save(role1);
+        roleRepository.save(role2);
 //
-//        byte[] bytes = Files.readAllBytes(Path.of("src/main/java/com/example/funtime_app/config/rasm.jpg"));
-//        Attachment attachment = Attachment.builder()
-//                .content(bytes)
-//                .contentType("png")
-//                .build();
-//        attachmentRepository.save(attachment);
-//
-//
-//
-//        User user1 = User.builder()
-//                .username("user")
-//                .roles(List.of(role2))
-//                .profilePhoto(attachment)
-//                .firstName("Ali")
-//                .lastName("Alijon")
-//                .email("samandartoyirov@gmail.com")
-//                .password(passwordEncoder.encode("123"))
-//                .build();
-//
-//
-//
-//          User user2 = User.builder()
-//                .username("admin")
-//                  .roles(List.of(role1))
-//                .password(passwordEncoder.encode("123"))
-//                .build();
-//
-//          userRepository.save(user1);
-//          userRepository.save(user2);
+        byte[] bytes = Files.readAllBytes(Path.of("src/main/java/com/example/funtime_app/config/rasm.jpg"));
+        Attachment attachment = Attachment.builder()
+                .content(bytes)
+                .contentType("png")
+                .build();
+        attachmentRepository.save(attachment);
+
+
+
+        User user1 = User.builder()
+                .username("user")
+                .roles(List.of(role2))
+                .profilePhoto(attachment)
+                .firstName("Ali")
+                .lastName("Alijon")
+                .email("samandartoyirov@gmail.com")
+                .password(passwordEncoder.encode("123"))
+                .build();
+
+
+
+          User user2 = User.builder()
+                .username("admin")
+                  .roles(List.of(role1))
+                .password(passwordEncoder.encode("123"))
+                .build();
+
+          userRepository.save(user1);
+          userRepository.save(user2);
 //
 //        Banner banner = Banner.builder()
 //                .banner(attachment)
@@ -119,40 +119,37 @@ public class Runner implements CommandLineRunner {
 //
 //        }
 //
-//        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 50; i++) {
+
+            CategoryTag categoryTag = CategoryTag.builder()
+                    .tagName("Tag"+i)
+                    .build();
+
+            categoryTagRepository.save(categoryTag);
+
+        }
+
+        List<CategoryTag> tags = categoryTagRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+
+        for (int i = 0; i < 10; i++) {
+
+            Attachment attachment2 = Attachment.builder()
+                    .content(bytes)
+                    .contentType("jpeg")
+                    .build();
+
+            attachmentRepository.save(attachment2);
+
+            Category category = Category.builder()
+                    .name("Category"+i)
+                    .attachment(attachment2)
+                    .build();
+
+            categoryRepository.save(category);
 //
-//            CategoryTag categoryTag = CategoryTag.builder()
-//                    .tagName("Tag"+i)
-//                    .build();
-//
-//            categoryTagRepository.save(categoryTag);
-//
-//        }
-//
-//        List<CategoryTag> tags = categoryTagRepository.findAll();
-//        List<User> users = userRepository.findAll();
-//
-//
-//        for (int i = 0; i < 10; i++) {
-//
-//            Attachment attachment2 = Attachment.builder()
-//                    .content(bytes)
-//                    .contentType("jpeg")
-//                    .build();
-//
-//            attachmentRepository.save(attachment2);
-//
-//            Category category = Category.builder()
-//                    .name("Category"+i)
-//                    .tags(List.of(
-//                            tags.get(random.nextInt(1,49))
-//                            ))
-//                    .attachment(attachment2)
-//                    .build();
-//
-//            categoryRepository.save(category);
-//
-//        }
+        }
 //
 //        List<Category> categories = categoryRepository.findAll();
 //        LocalDateTime now = LocalDateTime.now();

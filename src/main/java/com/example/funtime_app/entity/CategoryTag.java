@@ -1,10 +1,7 @@
 package com.example.funtime_app.entity;
 
 import jakarta.annotation.Nonnull;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +21,7 @@ public class CategoryTag {
     private UUID id;
 
     private String tagName;
+    @ManyToOne
+    private Category category;
 
 }

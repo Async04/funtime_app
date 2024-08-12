@@ -7,6 +7,7 @@ import java.util.UUID;
 /**
  * DTO for {@link com.example.funtime_app.entity.Category}
  */
-public record CategoryDTO(UUID id, UUID attachmentId, String name, List<CategoryTagDTO> tags) implements Serializable {
+public record CreateCategoryDTO(UUID attachmentId, String name, List<UUID> tagIds) implements Serializable {
 
 }
+
