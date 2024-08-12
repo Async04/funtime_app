@@ -42,7 +42,7 @@ public class UserController {
             User byUsername = userRepository.findByUsername(username);
             return ResponseEntity.ok(byUsername);
         } catch (Exception e) {
-            return ResponseEntity.status(403).body("User not found");
+            return ResponseEntity.status(401).body("User not found");
         }
     }
 

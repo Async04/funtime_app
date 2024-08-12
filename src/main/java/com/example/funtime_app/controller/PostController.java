@@ -67,13 +67,17 @@ public class PostController {
         return postServiceInterface.getTopPosts(page, size);
     }
     @GetMapping("/{categoryId}")
-    public ResponseEntity<?> getPostByCategoryId(@PathVariable UUID categoryId){
-        return postServiceInterface.getByCategoryId(categoryId);
+    public ResponseEntity<?> getPostByCategoryId(
+            @PathVariable UUID categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+            ){
+        return postServiceInterface.getByCategoryId(categoryId, size, page);
     }
 
 
     @GetMapping("/search")
-    public HttpEntity<?> search(String search){
+    public HttpEntity<?> search(@RequestParam(value = "search") String search){
         return postServiceInterface.getSearchedPosts(search);
     }
 

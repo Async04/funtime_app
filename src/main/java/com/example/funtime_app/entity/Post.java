@@ -38,7 +38,7 @@ public class Post {
     @OneToMany
     private List<CategoryTag> tags;
 
-    @CreationTimestamp
+
     private LocalDateTime createdAt;
 
 

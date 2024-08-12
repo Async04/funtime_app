@@ -28,13 +28,12 @@ public class SecurityConfig {
             m.requestMatchers("/v3/api-docs/**",
                             "/api/posts/**",
                             "/api/user/**",
+                            "/api/category/**",
                             "/swagger-ui/**",
                             "/swagger-ui.html",
-                            "/api/auth/**",
+                            "/api/**",
                             "/api/user/edit/**"
                             ).permitAll()
-                    .requestMatchers("/api/posts/**").hasRole("ADMIN")
-                    .requestMatchers("/api/posts/popular").hasRole("USER")
                     .anyRequest()
                     .authenticated();
         });

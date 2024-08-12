@@ -14,6 +14,7 @@ import com.example.funtime_app.repository.UserRepository;
 import com.github.fashionbrot.annotation.Valid;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -67,6 +68,7 @@ public class PostService implements PostServiceInterface {
         return postRepository.findAll(pageable);
     }
 
+    @Cacheable(value = "popularPosts")
     @Override
     public ResponseEntity<?> getPopularPosts(int page, int size) {
 
@@ -80,6 +82,7 @@ public class PostService implements PostServiceInterface {
         }
     }
 
+    @Cacheable(value = "newPosts")
     @Override
     public ResponseEntity<?> getNewPosts(int page, int size) {
         try {
@@ -106,6 +109,7 @@ public class PostService implements PostServiceInterface {
         }
     }
 
+    @Cacheable(value = "topPosts")
     @Override
     public ResponseEntity<?> getTopPosts(int page, int size) {
 
@@ -122,12 +126,12 @@ public class PostService implements PostServiceInterface {
     }
 
 
+
     @Override
-    public ResponseEntity<?> getByCategoryId(UUID categoryId) {
+    public ResponseEntity<?> getByCategoryId(UUID categoryId, Integer size, Integer page) {
 
         try {
-            List<PopularNewTrendyPostProjection> posts = postRepository.getByCategoryId(categoryId);
-
+            List<PopularNewTrendyPostProjection> posts = postRepository.getAllPostsByCategoryId(categoryId, (page+1)*size, size);
             return ResponseEntity.ok(posts);
         }
         catch (Exception e){

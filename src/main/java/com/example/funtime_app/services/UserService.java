@@ -82,8 +82,10 @@ public class UserService implements UserServiceInterface {
         Optional<User> byId = userRepository.findById(userId);
         System.out.println(userEditDto);
         if (byId.isPresent()){
+            System.out.println("User is valid");
             User user = byId.get();
             if (passwordEncoder.matches(userEditDto.getOldPassword(), user.getPassword())){
+                System.out.println("Password matched");
                 user.setEmail(userEditDto.getEmail());
                 user.setUsername(userEditDto.getUsername());
                 user.setPassword(passwordEncoder.encode(userEditDto.getNewPassword()));
@@ -113,6 +115,7 @@ public class UserService implements UserServiceInterface {
                     user.setProfilePhoto(attachment);
                 }
                 userRepository.save(user);
+                System.out.println("OOOOOOOOOOOOOOO");
                 return ResponseEntity.status(202).body("User successfully edited !!!");
 
             }
