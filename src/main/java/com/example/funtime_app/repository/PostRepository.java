@@ -73,19 +73,18 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     List<PopularNewTrendyPostProjection> getNewPosts(@Param("offset") int offset, @Param("limit") int limit);
 
     @Query(nativeQuery = true, value = """
-        select
-            p.id post_id,
-            p.attachment_id post_attachment_id,
-            p.user_id,
-            u.profile_photo_id,
-            p.title,
-            p.description
-        from posts p
-        join users u on p.user_id = u.id
-        join attachment a on a.id = p.attachment_id
-        join post_category pc on p.id = pc.post_id
-        where pc.category_id = :categoryId
-        order by p.created_at desc, EXTRACT(DAY FROM p.created_at) desc
+    select
+        p.id post_id,
+        p.attachment_id post_attachment_id,
+        p.user_id,
+        u.profile_photo_id,
+        p.title,
+        p.description
+    from posts p
+    join users u on p.user_id = u.id
+    join attachment a on a.id = p.attachment_id
+    where p.category_id = :categoryId
+    order by p.created_at desc, EXTRACT(DAY FROM p.created_at) desc
 """)
     List<PopularNewTrendyPostProjection> getByCategoryId(@Param("categoryId") UUID categoryId);
 

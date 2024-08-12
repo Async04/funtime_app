@@ -22,12 +22,13 @@ public class UserController {
     private final UserServiceInterface userServiceInterface;
     private final UserRepository userRepository;
 
-    @CrossOrigin
+    @CrossOrigin(origins = "*")
     @PostMapping("/authorize")
     public HttpEntity<?> login(@RequestBody UserDTO userDTO) {
 
         return userServiceInterface.saveUser(userDTO);
     }
+
     @PostMapping("/otp-check/{otpNumber}")
     public HttpEntity<?> checkOtp(@PathVariable String otpNumber, @RequestParam String email) {
         return userServiceInterface.checkOtp(otpNumber, email);
@@ -56,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/edit/{userId}")
-    public ResponseEntity<?> getEditData(@PathVariable UUID userId){
+    public ResponseEntity<?> getEditData(@PathVariable UUID userId) {
         return userServiceInterface.getEditData(userId);
     }
 
