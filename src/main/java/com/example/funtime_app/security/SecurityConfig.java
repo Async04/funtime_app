@@ -31,7 +31,8 @@ public class SecurityConfig {
                             "/swagger-ui/**",
                             "/swagger-ui.html",
                             "/api/auth/**",
-                            "/api/user/edit/**"
+                            "/api/user/edit/**",
+                            "/api/category/**"
                             ).permitAll()
                     .requestMatchers("/api/posts/**").hasRole("ADMIN")
                     .requestMatchers("/api/posts/popular").hasRole("USER")
