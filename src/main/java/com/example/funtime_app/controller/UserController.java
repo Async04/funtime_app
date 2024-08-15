@@ -2,6 +2,7 @@ package com.example.funtime_app.controller;
 
 import com.example.funtime_app.dto.UserDTO;
 import com.example.funtime_app.dto.UserEditDTO;
+import com.example.funtime_app.dto.request.ResendCodeDTO;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.UserServiceInterface;
 import com.example.funtime_app.repository.UserRepository;
@@ -25,8 +26,12 @@ public class UserController {
     @CrossOrigin(origins = "*")
     @PostMapping("/authorize")
     public HttpEntity<?> login(@RequestBody UserDTO userDTO) {
-
         return userServiceInterface.saveUser(userDTO);
+    }
+
+    @PostMapping("/resend")
+    public ResponseEntity<?> resendCode(@RequestBody ResendCodeDTO resendCodeDTO){
+        return userServiceInterface.resend(resendCodeDTO);
     }
 
     @PostMapping("/otp-check/{otpNumber}")

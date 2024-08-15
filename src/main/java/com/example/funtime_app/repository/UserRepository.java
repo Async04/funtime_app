@@ -10,11 +10,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, UUID> {
     User findByUsername(String username);
-    User findByEmail(String email);
+    List<User> findByEmail(String email);
 
     @Query(nativeQuery = true, value = """
             

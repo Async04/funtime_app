@@ -2,6 +2,7 @@ package com.example.funtime_app.repository;
 
 
 import com.example.funtime_app.entity.Role;
+import com.example.funtime_app.entity.enums.RoleName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,4 +16,6 @@ public interface RoleRepository extends JpaRepository<Role, Integer> {
                 join roles r on ur.role_id=r.id where ur.user_id=:userId 
                     """, nativeQuery = true)
     List<Role> getRoles(UUID userId);
+
+    Role findByRoleName(String roleName);
 }

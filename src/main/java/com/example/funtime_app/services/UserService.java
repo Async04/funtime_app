@@ -2,16 +2,17 @@ package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.UserDTO;
 import com.example.funtime_app.dto.UserEditDTO;
-import com.example.funtime_app.entity.Attachment;
-import com.example.funtime_app.entity.Banner;
-import com.example.funtime_app.entity.User;
+import com.example.funtime_app.dto.request.ResendCodeDTO;
+import com.example.funtime_app.dto.response.UserResponseDTO;
+import com.example.funtime_app.entity.*;
+import com.example.funtime_app.entity.enums.OTPStatus;
+import com.example.funtime_app.entity.enums.RoleName;
+import com.example.funtime_app.entity.enums.UserStatus;
 import com.example.funtime_app.interfaces.UserServiceInterface;
 import com.example.funtime_app.mappers.UserMapper;
 import com.example.funtime_app.projection.UserEditProjection;
 import com.example.funtime_app.projection.UserProfileProjection;
-import com.example.funtime_app.repository.AttachmentRepository;
-import com.example.funtime_app.repository.BannerRepository;
-import com.example.funtime_app.repository.UserRepository;
+import com.example.funtime_app.repository.*;
 import com.github.fashionbrot.annotation.Valid;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -34,21 +37,61 @@ public class UserService implements UserServiceInterface {
     private final OTPService otpService;
     private final PasswordEncoder passwordEncoder;
     private final AttachmentRepository attachmentRepository;
-
-    private final Map<String, String> otpStorage = new HashMap<>();
+    private final CodeRepository codeRepository;
     private final BannerRepository bannerRepository;
+    private final RoleRepository roleRepository;
 
 
     @Override
+
     @Transactional
     public HttpEntity<?> saveUser(@Valid UserDTO userDTO) {
         try {
-            User user = userMapper.toEntity(userDTO);
+            Attachment attachment = null;
+            if (userDTO.profilePhoto() != null) {
+                MultipartFile multipartFile = userDTO.profilePhoto();
+                Attachment attachment1 = Attachment.builder()
+                        .contentType("png")
+                        .content(multipartFile.getBytes())
+                        .build();
+                attachmentRepository.save(attachment1);
+                attachment = attachment1;
+            }
+            List<User> byEmail = userRepository.findByEmail(userDTO.email());
+            if (!byEmail.isEmpty()) {
+                return ResponseEntity.status(401).body("This email already verification");
+            }
+
+            Optional<Role> byId = roleRepository.findById(2);
+            System.out.println(byId.get());
+            User user = User.builder()
+                    .profilePhoto(attachment)
+                    .username(userDTO.username())
+                    .firstName(userDTO.firstName())
+                    .email(userDTO.email())
+                    .lastName(userDTO.lastName())
+                    .status(UserStatus.NOACTIVE)
+                    .roles(List.of(byId.get()))
+                    .password(passwordEncoder.encode(userDTO.password()))
+                    .build();
             User savedUser = userRepository.save(user);
             String otp = otpService.generateOTP();
-            otpStorage.put(user.getEmail(), otp);
+
+
+            Code code = Code.builder()
+                    .oneTimePassword(otp)
+                    .fromTime(LocalDateTime.now())
+                    .expireTime(LocalDateTime.now().plusMinutes(2))
+                    .status(OTPStatus.ALIVE)
+                    .user(savedUser)
+                    .build();
+
+            codeRepository.save(code);
             emailService.sendEmail(user.getEmail(), "Your OTP Code", "Your OTP code is: " + otp);
-            return ResponseEntity.ok(savedUser);
+            return ResponseEntity.ok(UserResponseDTO.builder()
+                    .email(savedUser.getEmail())
+                    .id(savedUser.getId())
+                    .build());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("An error occurred while saving the user.");
         }
@@ -62,19 +105,36 @@ public class UserService implements UserServiceInterface {
 
     @Transactional
     public HttpEntity<?> checkOtp(String otpNumber, String email) {
-        String storedOtp = otpStorage.get(email);
 
-        if (storedOtp == null) {
-            return ResponseEntity.badRequest().body("No OTP found for this email");
+        List<User> byEmail = userRepository.findByEmail(email);
+        User user = byEmail.get(0);
+
+        Optional<Code> codeOptional = codeRepository.findByUserId(user.getId());
+     if (codeOptional.isPresent()) {
+
+            Code code = codeOptional.get();
+            String storedOtp = code.getOneTimePassword();
+
+            if (code.getExpireTime().isBefore(LocalDateTime.now())) {
+                codeRepository.deleteById(code.getId());
+                return ResponseEntity.badRequest().body("OTP Code expired");
+            }
+            if (storedOtp == null) {
+                return ResponseEntity.badRequest().body("No OTP found for this email");
+            }
+            if (!storedOtp.equals(otpNumber)) {
+                return ResponseEntity.badRequest().body("Invalid OTP");
+            }
+            user.setStatus(UserStatus.ACTIVE);
+            userRepository.save(user);
+            codeRepository.deleteById(code.getId());
+            return ResponseEntity.ok("OTP verified successfully");
         }
-
-        if (!storedOtp.equals(otpNumber)) {
-            return ResponseEntity.badRequest().body("Invalid OTP");
-        }
-
-        otpStorage.remove(email);
-        return ResponseEntity.ok("OTP verified successfully");
+    else
+    {
+        return ResponseEntity.badRequest().body("No OTP found");
     }
+}
 
     @Override
     public ResponseEntity<?> edit(UUID userId, UserEditDTO userEditDto) throws IOException {
@@ -137,4 +197,33 @@ public class UserService implements UserServiceInterface {
             return ResponseEntity.status(401).body("Not found user!!!");
         }
     }
+
+    @Override
+    public ResponseEntity<?> resend(ResendCodeDTO resendCodeDTO) {
+
+        String otp = otpService.generateOTP();
+        List<User> byEmail = userRepository.findByEmail(resendCodeDTO.getEmail());
+
+        if (!byEmail.isEmpty()){
+            User user = byEmail.get(0);
+            Code code = Code.builder()
+                    .status(OTPStatus.ALIVE)
+                    .fromTime(LocalDateTime.now())
+                    .expireTime(LocalDateTime.now().plusMinutes(2))
+                    .user(user)
+                    .oneTimePassword(otp)
+                    .build();
+
+            codeRepository.save(code);
+
+            emailService.sendEmail(resendCodeDTO.getEmail(),"Your OTP Code","Your OTP code is "+otp);
+            return ResponseEntity.ok("OTP code sent!");
+        }
+       else {
+           return ResponseEntity.badRequest().body("Not found user with this email");
+        }
+
+    }
+
+
 }
