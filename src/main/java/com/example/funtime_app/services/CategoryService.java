@@ -11,10 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,11 +24,14 @@ public class CategoryService implements CategoryServiceInterface {
 
 
     @Override
-    public List<HttpEntity<?>> getAllCategories() {
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
-        return Collections.singletonList(ResponseEntity.ok(categories));
-
+        List<CategoryDTO> collect = categories.stream()
+                .map(categoryMapper::toDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(collect);
     }
+
 
     @Override
     public HttpEntity<?> getAllTagsByCategory(String id) {

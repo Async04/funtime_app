@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface PostServiceInterface {
@@ -26,4 +27,6 @@ public interface PostServiceInterface {
     HttpEntity<?> getSearchedPosts(String search);
 
     ResponseEntity<?> getUserAllPosts(UUID userId);
+
+    ResponseEntity<List<PostDTO>> getAllTagsPost(UUID tagsId);
 }

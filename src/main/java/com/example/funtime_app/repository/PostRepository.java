@@ -1,5 +1,6 @@
 package com.example.funtime_app.repository;
 
+import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -130,5 +131,23 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                         
             """)
     List<PopularNewTrendyPostProjection> getAllUserPostsByUserId(@Param(value = "userId") UUID userId);
+
+
+    @Query(nativeQuery = true, value = """
+        SELECT
+            p.id AS postId,
+            p.attachment_id AS postAttachmentId,
+            p.user_id AS userId,
+            u.profile_photo_id AS profilePhotoId,
+            p.title AS title,
+            p.description AS description
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        JOIN attachment a ON a.id = p.attachment_id
+        JOIN category_tag ct ON ct.id = :tagsId
+        JOIN post_tags pt ON pt.post_id = p.id AND pt.tags_id = ct.id
+        WHERE ct.id = :tagsId
+        """)
+    List<PostDTO> getAllPostByTagsId(@Param("tagsId") UUID tagsId);
 
 }
