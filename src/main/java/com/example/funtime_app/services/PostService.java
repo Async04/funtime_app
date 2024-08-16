@@ -37,6 +37,7 @@ public class PostService implements PostServiceInterface {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final TagService tagService;
 
     @Transactional
     @Override
@@ -51,6 +52,9 @@ public class PostService implements PostServiceInterface {
                     .description(postDto.description())
                     .category(categoryOptional.get())
                     .user(userOptional.get())
+                    .attachment(attachment)
+                    .tags(tagService.generateTags(postDto))
+                    .views(0)
                     .build();
             Post savedPost = postRepository.save(post);
             PostDTO postDTO1 = postMapper.toDto(savedPost);
@@ -129,6 +133,7 @@ public class PostService implements PostServiceInterface {
 
         try {
             List<PopularNewTrendyPostProjection> posts = postRepository.getAllPostsByCategoryId(categoryId, (page+1)*size, size);
+            System.out.println(posts);
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new RuntimeException("not found"));

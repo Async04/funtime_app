@@ -58,6 +58,7 @@ public class UserController {
 
     @PostMapping("/edit/{userId}")
     public void editProfile(@PathVariable UUID userId, @RequestBody UserEditDTO userEditDto) throws IOException {
+        System.out.println(userEditDto);
         userServiceInterface.edit(userId, userEditDto);
     }
 

@@ -79,9 +79,14 @@ public class PostController {
         return postServiceInterface.getTopPosts(page, size);
     }
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<?> getPostByCategoryId(@PathVariable UUID categoryId) {
-        return postServiceInterface.getByCategoryId(categoryId);
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getPostByCategoryId(
+            @PathVariable UUID categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+
+    ) {
+        return postServiceInterface.getByCategoryId(categoryId, page, size);
     }
 
 
