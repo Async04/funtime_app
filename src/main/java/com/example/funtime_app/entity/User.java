@@ -1,5 +1,6 @@
 package com.example.funtime_app.entity;
 
+import com.example.funtime_app.entity.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,6 +44,9 @@ public class User implements UserDetails {
 
     @CreationTimestamp
     private LocalDateTime lastUpdateAt;
+
+    @Enumerated(value = EnumType.STRING)
+    private UserStatus status = UserStatus.NOACTIVE;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

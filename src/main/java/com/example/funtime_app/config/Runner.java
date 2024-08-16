@@ -28,11 +28,16 @@ public class Runner implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final BannerRepository bannerRepository;
+    private final FollowerRepository followerRepository;
 
     @Override
     public void run(String... args) throws Exception {
 
 
+
+
+/**
+//
 //        Role role1 = Role.builder()
 //                .roleName(RoleName.ROLE_ADMIN)
 //                .build();
@@ -77,6 +82,132 @@ public class Runner implements CommandLineRunner {
 //                .user(user1)
 //                .build();
 //        bannerRepository.save(banner);
+
+**/
+
+
+
+
+
+
+
+
+
+      /**  Random random = new Random();
+        byte[] bytes1 = Files.readAllBytes(Path.of("src/main/java/com/example/funtime_app/config/rasm.jpg"));
+
+        List<Role> roles = roleRepository.findAll();
+
+        for (int i = 0; i < 10000; i++) {
+
+            Attachment attachment1 = Attachment.builder()
+                    .contentType("jpeg")
+                    .content(bytes1)
+                    .build();
+
+            attachmentRepository.save(attachment1);
+
+            User user = User.builder()
+                    .email("email"+i+"@gmail.com")
+                    .lastName("Lastname"+i)
+                    .firstName("Firstname"+i)
+                    .profilePhoto(attachment1)
+                    .roles(List.of(roles.get(1)))
+                    .username("user"+i)
+                    .build();
+
+            userRepository.save(user);
+
+        }
+
+        for (int i = 0; i < 50; i++) {
+
+            CategoryTag categoryTag = CategoryTag.builder()
+                    .tagName("Tag"+i)
+                    .build();
+
+            categoryTagRepository.save(categoryTag);
+
+        }
+
+        List<CategoryTag> tags = categoryTagRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+
+        for (int i = 0; i < 10; i++) {
+
+            Attachment attachment2 = Attachment.builder()
+                    .content(bytes1)
+                    .contentType("jpeg")
+                    .build();
+
+            attachmentRepository.save(attachment2);
+
+            Category category = Category.builder()
+                    .name("Category"+i)
+                    .tags(List.of(
+                            tags.get(random.nextInt(1,49))
+                            ))
+                    .attachment(attachment2)
+                    .build();
+
+            categoryRepository.save(category);
+
+        }
+
+
+        List<Category> categories = categoryRepository.findAll();
+        LocalDateTime now = LocalDateTime.now();
+
+        for (int i = 0; i < 10000; i++) {
+
+            Attachment attachment3 = Attachment.builder()
+                    .content(bytes1)
+                    .contentType("jpeg")
+                    .build();
+
+            attachmentRepository.save(attachment3);
+
+            Post post = Post.builder()
+                    .attachment(attachment3)
+                    .description("Description "+i)
+                    .title("Title "+i)
+                    .user(users.get(random.nextInt(1, 2000)))
+                    .category(categories.get(random.nextInt(1,10)))
+                    .views(random.nextInt(2000, 231234))
+                    .createdAt(now.minusDays(random.nextInt(1, 50)))
+                    .build();
+
+            postRepository.save(post);
+
+        }
+
+
+        for (int i = 0; i < 100000; i++) {
+
+
+            int index = random.nextInt(1, 10000);
+            int index1 = random.nextInt(1, 10000);
+
+            while (index==index1){
+                index1=random.nextInt(1, 10000);
+            }
+
+            Follower follower = Follower.builder()
+                    .followedBy(users.get(index))
+                    .follower(users.get(index1))
+                    .build();
+
+
+
+            followerRepository.save(follower);
+        }
+
+
+
+
+**/
+
 
 
 //         byte[] bytes1 = Files.readAllBytes(Path.of("com/example/funtime_app/config/rasm.jpg"));
@@ -145,6 +276,7 @@ public class Runner implements CommandLineRunner {
 //            Category category = Category.builder()
 //                    .name("Category"+i)
 //                    .tags(List.of(
+
 //                            tags.get(random.nextInt(1,49))
 //                            ))
 //                    .attachment(attachment2)

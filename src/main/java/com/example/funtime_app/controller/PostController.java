@@ -9,7 +9,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,7 +18,7 @@ public class PostController {
     private final PostServiceInterface postServiceInterface;
 
     @PostMapping("/save")
-    public HttpEntity<?> saveNewPost(PostDTO postDto) {
+    public HttpEntity<?> saveNewPost(PostDTO postDto){
         return postServiceInterface.savePost(postDto);
     }
 
@@ -27,25 +26,15 @@ public class PostController {
     public Page<Post> getPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
-    ) {
-        return postServiceInterface.getPosts(page, size);
+    ){
+        return postServiceInterface.getPosts(page,size);
     }
-
-    @GetMapping("/{tagsId}")
-    public ResponseEntity<List<PostDTO>> getByTagsId(@PathVariable UUID tagsId){
-
-        return postServiceInterface.getAllTagsPost(tagsId);
-
-    }
-
-
-
 
     @GetMapping("/popular")
     public ResponseEntity<?> getPopularPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
-    ) {
+    ){
         return postServiceInterface.getPopularPosts(page, size);
     }
 
@@ -55,7 +44,7 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
 
-    ) {
+    ){
         return postServiceInterface.getNewPosts(page, size);
     }
 
@@ -65,33 +54,35 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
 
-    ) {
+     ){
         return postServiceInterface.getTrendyPosts(page, size);
     }
-
     @GetMapping("/top")
     public ResponseEntity<?> getTopPosts(
 
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
 
-    ) {
+     ){
         return postServiceInterface.getTopPosts(page, size);
     }
-
     @GetMapping("/{categoryId}")
-    public ResponseEntity<?> getPostByCategoryId(@PathVariable UUID categoryId) {
-        return postServiceInterface.getByCategoryId(categoryId);
+    public ResponseEntity<?> getPostByCategoryId(
+            @PathVariable UUID categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+            ){
+        return postServiceInterface.getByCategoryId(categoryId, size, page);
     }
 
 
     @GetMapping("/search")
-    public HttpEntity<?> search(String search) {
+    public HttpEntity<?> search(@RequestParam(value = "search") String search){
         return postServiceInterface.getSearchedPosts(search);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getUserPosts(@PathVariable UUID userId) {
+    public ResponseEntity<?> getUserPosts(@PathVariable UUID userId){
         return postServiceInterface.getUserAllPosts(userId);
     }
 }

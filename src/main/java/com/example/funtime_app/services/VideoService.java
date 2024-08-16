@@ -4,6 +4,7 @@ import com.example.funtime_app.interfaces.VideoServiceInterface;
 import com.example.funtime_app.projection.LatestVideoProjection;
 import com.example.funtime_app.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ public class VideoService implements VideoServiceInterface {
 
     private final VideoRepository videoRepository;
     @Override
+    @Cacheable(value = "latestVideo")
     public ResponseEntity<?> getLatestVideo() {
 
         List<LatestVideoProjection> videoDtos = videoRepository.getLatestVideo();

@@ -2,6 +2,7 @@ package com.example.funtime_app.interfaces;
 
 import com.example.funtime_app.dto.UserDTO;
 import com.example.funtime_app.dto.UserEditDTO;
+import com.example.funtime_app.dto.request.ResendCodeDTO;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
@@ -19,4 +20,5 @@ public interface UserServiceInterface {
 
     ResponseEntity<?> getEditData(UUID userId);
 
+    ResponseEntity<?> resend(ResendCodeDTO resendCodeDTO);
 }
