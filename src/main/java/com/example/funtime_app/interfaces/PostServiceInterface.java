@@ -5,13 +5,14 @@ import com.example.funtime_app.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface PostServiceInterface {
 
-    HttpEntity<?> savePost(PostDTO postDto);
+    ResponseEntity<?> savePost(PostDTO postDto);
 
     Page<Post> getPosts(int page, int size);
 
@@ -22,7 +23,7 @@ public interface PostServiceInterface {
     ResponseEntity<?> getTrendyPosts(int page, int size);
     ResponseEntity<?> getTopPosts(int page, int size);
 
-    ResponseEntity<?> getByCategoryId(UUID categoryId, Integer size, Integer page);
+    ResponseEntity<?> getByCategoryId(UUID categoryId, Integer page, Integer size);
 
     HttpEntity<?> getSearchedPosts(String search);
 

@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -24,11 +26,9 @@ public class UserEditDTO {
     private String oldPassword;
     @NotBlank
     private String newPassword;
-    @NotBlank
-    private String email;
 
-    private MultipartFile profileBanner;
-    private MultipartFile profilePhoto;
+    private UUID bannerAttachmentId;
+    private UUID profilePhotoAttachmentId;
 
 
 }

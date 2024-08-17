@@ -2,25 +2,25 @@ package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Attachment;
-import com.example.funtime_app.entity.Category;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.PostServiceInterface;
 import com.example.funtime_app.mappers.PostMapper;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
+import com.example.funtime_app.repository.AttachmentRepository;
 import com.example.funtime_app.repository.CategoryRepository;
 import com.example.funtime_app.repository.PostRepository;
 import com.example.funtime_app.repository.UserRepository;
 import com.github.fashionbrot.annotation.Valid;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,31 +37,41 @@ public class PostService implements PostServiceInterface {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final TagService tagService;
+    private final AttachmentRepository attachmentRepository;
 
+    @SneakyThrows
     @Transactional
     @Override
-    public HttpEntity<?> savePost(@Valid PostDTO postDto) {
-        MultipartFile file = postDto.file();
-        Attachment attachment = attachmentService.saveAttachment(file);
-        Optional<User> userOptional = userRepository.findById(postDto.userId());
-        Optional<Category> categoryOptional = categoryRepository.findById(postDto.categoryId());
-        if (attachment != null && userOptional.isPresent() && categoryOptional.isPresent()) {
+    public ResponseEntity<?> savePost(@Valid PostDTO postDto) {
+
+        if (postDto.getAttachmentId()!=null){
+
+            Attachment attachment =
+                    attachmentRepository.findById(postDto.getAttachmentId()).get();
+
+            attachmentRepository.save(attachment);
+
+            Optional<User> byId = userRepository.findById(postDto.getUserId());
+            if (byId.isEmpty()){
+                return ResponseEntity.status(401).body("User not found");
+            }
             Post post = Post.builder()
-                    .title(postDto.title())
-                    .description(postDto.description())
-                    .category(categoryOptional.get())
-                    .user(userOptional.get())
+                    .title(postDto.getTitle())
+                    .description(postDto.getDescription())
+                    .user(byId.get())
+                    .tags(tagService.generateTags(postDto))
+                    .views(0)
+                    .attachment(attachment)
+                    .category(categoryRepository.findById(postDto.getCategoryId()).get())
                     .build();
-            Post savedPost = postRepository.save(post);
-            PostDTO postDTO1 = postMapper.toDto(savedPost);
-            return ResponseEntity.ok(postDTO1);
+
+            postRepository.save(post);
+            return ResponseEntity.ok("Post saved succesfully!!!");
         }
-        String errorMessage = "Failed to create post. ";
-        if (attachment == null) errorMessage += "Attachment could not be saved. ";
-        if (userOptional.isEmpty()) errorMessage += "User not found. ";
-        if (categoryOptional.isEmpty()) errorMessage += "Category not found. ";
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage.trim());
-    }
+
+        return  ResponseEntity.badRequest().body("File cannot be null");
+       }
 
     @Override
     public Page<Post> getPosts(int page, int size) {
@@ -125,10 +135,11 @@ public class PostService implements PostServiceInterface {
 
 
     @Override
-    public ResponseEntity<?> getByCategoryId(UUID categoryId, Integer size, Integer page) {
+    public ResponseEntity<?> getByCategoryId(UUID categoryId, Integer page, Integer size) {
 
         try {
             List<PopularNewTrendyPostProjection> posts = postRepository.getAllPostsByCategoryId(categoryId, (page+1)*size, size);
+            System.out.println(posts);
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new RuntimeException("not found"));

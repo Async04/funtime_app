@@ -22,7 +22,7 @@ public class Banner {
     @OneToOne
     private User user;
 
-    @OneToOne
-    private Attachment banner;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Attachment attachment;
 
 }
