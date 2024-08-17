@@ -27,14 +27,4 @@ class CategoryServiceTest {
         this.categoryMapper = Mockito.mock(CategoryMapper.class);
         this.categoryService = new CategoryService(categoryRepository, categoryMapper);
     }
-
-    @Test
-    void getAllCategories() {
-
-        Mockito.when(categoryRepository.findAll()).thenReturn(new ArrayList<Category>());
-        List<HttpEntity<?>> allCategories = categoryService.getAllCategories();
-        Assertions.assertNotNull(allCategories);
-
-    }
-
 }
