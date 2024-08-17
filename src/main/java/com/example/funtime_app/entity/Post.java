@@ -35,7 +35,7 @@ public class Post {
     private Integer views;
 
 
-    @OneToMany
+    @ManyToMany
     private List<CategoryTag> tags;
 
     @CreationTimestamp

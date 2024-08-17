@@ -2,6 +2,7 @@ package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.UserDTO;
 import com.example.funtime_app.dto.UserEditDTO;
+import com.example.funtime_app.dto.request.ChangePhotoDTO;
 import com.example.funtime_app.dto.request.ResendCodeDTO;
 import com.example.funtime_app.dto.response.UserResponseDTO;
 import com.example.funtime_app.entity.*;
@@ -137,6 +138,7 @@ public class UserService implements UserServiceInterface {
 }
 
     @Override
+    @Transactional
     public ResponseEntity<?> edit(UUID userId, UserEditDTO userEditDto) throws IOException {
 
         Optional<User> byId = userRepository.findById(userId);
@@ -146,33 +148,29 @@ public class UserService implements UserServiceInterface {
             User user = byId.get();
             if (passwordEncoder.matches(userEditDto.getOldPassword(), user.getPassword())){
                 System.out.println("Password matched");
-                user.setEmail(userEditDto.getEmail());
                 user.setUsername(userEditDto.getUsername());
                 user.setPassword(passwordEncoder.encode(userEditDto.getNewPassword()));
                 user.setLastName(userEditDto.getLastName());
                 user.setFirstName(userEditDto.getFirstName());
-                if (userEditDto.getProfileBanner()!=null){
-                    bannerRepository.deleteByUserId(userId);
-                    Attachment attachment = Attachment.builder()
-                            .content(userEditDto.getProfileBanner().getBytes())
-                            .contentType("png")
-                            .build();
-                    attachmentRepository.save(attachment);
+                if (userEditDto.getProfilePhotoAttachmentId()!=null){
+                    if (user.getProfilePhoto()!=null) {
+                        Attachment profilePhoto = user.getProfilePhoto();
+                        attachmentRepository.deleteById(profilePhoto.getId());
+                    }
+                    UUID profilePhotoId = userEditDto.getProfilePhotoAttachmentId();
+                    Attachment attachment = attachmentRepository.findById(profilePhotoId).get();
+                    user.setProfilePhoto(attachment);
+                }
+
+                if (userEditDto.getBannerAttachmentId()!=null) {
+                    bannerRepository.deleteByUserId(user.getId());
+                    UUID bannerAttachmentId = userEditDto.getBannerAttachmentId();
+                    Attachment attachment = attachmentRepository.findById(bannerAttachmentId).get();
                     Banner banner = Banner.builder()
-                            .banner(attachment)
+                            .attachment(attachment)
                             .user(user)
                             .build();
                     bannerRepository.save(banner);
-                }
-
-                if (userEditDto.getProfilePhoto()!=null){
-                    Attachment attachment = Attachment.builder()
-                            .contentType("png")
-                            .content(userEditDto.getProfilePhoto().getBytes())
-                            .build();
-
-                    attachmentRepository.save(attachment);
-                    user.setProfilePhoto(attachment);
                 }
                 userRepository.save(user);
                 System.out.println("OOOOOOOOOOOOOOO");
@@ -221,6 +219,36 @@ public class UserService implements UserServiceInterface {
         }
        else {
            return ResponseEntity.badRequest().body("Not found user with this email");
+        }
+
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> changePhoto(ChangePhotoDTO photoDTO) {
+
+        Optional<User> userOptional = userRepository.findById(photoDTO.getUserId());
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Optional<Attachment> optionalAttachment = attachmentRepository.findById(photoDTO.getAttachmentId());
+
+            if (optionalAttachment.isPresent()){
+                if (user.getProfilePhoto()!=null){
+                    attachmentRepository.deleteById(user.getProfilePhoto().getId());
+                }
+
+                Attachment attachment = optionalAttachment.get();
+                user.setProfilePhoto(attachment);
+                userRepository.save(user);
+
+                return ResponseEntity.ok("User photo set up!!!");
+            }
+            else {
+                return ResponseEntity.badRequest().body("Photo not found!!!");
+            }
+        }
+        else {
+            return ResponseEntity.badRequest().body("User not found!!!");
         }
 
     }

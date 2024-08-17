@@ -1,4 +1,4 @@
-package com.example.funtime_app.dto;
+package com.example.funtime_app.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Data
-public class CategoryTagDTO {
+public class CategoryResponseTagDTO {
 
     private String tagName;
 

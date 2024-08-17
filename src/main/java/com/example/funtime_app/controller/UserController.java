@@ -2,6 +2,7 @@ package com.example.funtime_app.controller;
 
 import com.example.funtime_app.dto.UserDTO;
 import com.example.funtime_app.dto.UserEditDTO;
+import com.example.funtime_app.dto.request.ChangePhotoDTO;
 import com.example.funtime_app.dto.request.ResendCodeDTO;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.UserServiceInterface;
@@ -45,6 +46,7 @@ public class UserController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             User byUsername = userRepository.findByUsername(username);
+            System.out.println(byUsername);
             return ResponseEntity.ok(byUsername);
         } catch (Exception e) {
             return ResponseEntity.status(401).body("User not found");
@@ -65,6 +67,11 @@ public class UserController {
     @GetMapping(value = "/edit/{userId}")
     public ResponseEntity<?> getEditData(@PathVariable UUID userId) {
         return userServiceInterface.getEditData(userId);
+    }
+
+    @PostMapping("/change/photo")
+    public ResponseEntity<?> setProfilePhoto(@RequestBody ChangePhotoDTO photoDTO){
+       return userServiceInterface.changePhoto(photoDTO);
     }
 
 }

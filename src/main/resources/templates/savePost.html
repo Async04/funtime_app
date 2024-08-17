@@ -3,77 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Form</title>
+    <title>Upload Post</title>
 </head>
 <body>
-<form id="postForm">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title"><br><br>
 
-    <label for="description">Description:</label>
-    <textarea id="description" name="description"></textarea><br><br>
+<h1>Upload Post</h1>
 
-    <label for="userId">User ID:</label>
-    <input type="text" id="userId" name="userId"><br><br>
-
-    <label for="categoryId">Category ID:</label>
-    <input type="text" id="categoryId" name="categoryId"><br><br>
-
-    <div id="tagsContainer">
-        <label >Tags:</label><br>
-        <div class="tag-entry">
-            <input type="text" name="tagId[]" placeholder="Enter Tag ID"><br>
-        </div>
+<form id="postForm" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" required>
     </div>
-    <button type="button" onclick="addTag()">Add Another Tag</button><br><br>
-
-    <label for="file">Upload File:</label>
-    <input type="file" id="file" name="file"><br><br>
-
-    <button type="button" onclick="saveNewPost()">Submit</button>
+    <br>
+    <div>
+        <label for="description">Description:</label>
+        <input type="text" id="description" required>
+    </div>
+    <br>
+    <div>
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" required>
+    </div>
+    <br>
+    <div>
+        <label for="categoryId">Category ID:</label>
+        <input type="text" id="categoryId" required>
+    </div>
+    <br>
+    <div>
+        <label for="tags">Tags (JSON format):</label>
+        <textarea id="tags" rows="4" cols="50" required>[{ "tagId": "your-tag-id-here" }]</textarea>
+    </div>
+    <br>
+    <div>
+        <label for="file">File:</label>
+        <input type="file" id="file" required>
+    </div>
+    <br>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
 </form>
 
 <script>
-    function addTag() {
-        const tagsContainer = document.getElementById('tagsContainer');
-        const tagEntry = document.createElement('div');
-        tagEntry.className = 'tag-entry';
-        tagEntry.innerHTML = '<input type="text" name="tagId[]" placeholder="Enter Tag ID"><br>';
-        tagsContainer.appendChild(tagEntry);
-    }
+    document.getElementById("postForm").onsubmit = function(event) {
+        event.preventDefault();
 
-    async function saveNewPost() {
-        const form = document.getElementById('postForm');
-        const formData = new FormData(form);
+        let formData = new FormData();
 
-        // Gather all tag IDs
-        const tagIds = Array.from(document.getElementsByName('tagId[]')).map(input => ({
-            tagId: input.value,
-            tagName: null // tagName can be null as it's not required here
-        }));
+        // Creating the JSON object from form inputs
+        let postData = {
+            title: document.getElementById("title").value,
+            description: document.getElementById("description").value,
+            userId: document.getElementById("userId").value,
+            categoryId: document.getElementById("categoryId").value,
+            tags: JSON.parse(document.getElementById("tags").value)
+        };
 
-        // Append the tags JSON string to the form data
-        formData.append('tags', JSON.stringify(tagIds));
+        // JSON obyektini FormData'ga qo'shish
+        formData.append("postData", new Blob([JSON.stringify(postData)], {type: "application/json"}));
 
-        try {
-            const response = await fetch('/api/posts/save', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                alert('Post saved successfully!');
-                console.log(result);
-            } else {
-                alert('Failed to save the post.');
-                console.error('Error:', response.statusText);
-            }
-        } catch (error) {
-            alert('An error occurred while saving the post.');
-            console.error('Error:', error);
+        // Faylni FormData'ga qo'shish
+        let fileInput = document.getElementById("file");
+        if (fileInput.files.length > 0) {
+            formData.append("file", fileInput.files[0]);
         }
-    }
+
+        // Append the serialized JSON and the file to formData
+        formData.append("post", JSON.stringify(postData)); // Key "post" can be anything, this will be the JSON part
+        console.log("AAAAAAAAAAAA")
+        console.log(postData)
+        fetch('/api/posts/save', {
+            method: 'POST',
+            body: postData
+        })
+
+            .then(response => response.json())
+            .then(data => alert("Success: " + JSON.stringify(data)))
+            .catch(error => alert("Error: " + error));
+    };
 </script>
+
 </body>
 </html>

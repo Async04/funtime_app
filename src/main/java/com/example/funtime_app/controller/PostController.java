@@ -3,11 +3,13 @@ package com.example.funtime_app.controller;
 import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.interfaces.PostServiceInterface;
+import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,8 +21,13 @@ public class PostController {
     private final PostServiceInterface postServiceInterface;
 
     @PostMapping("/save")
-    public HttpEntity<?> saveNewPost(PostDTO postDto) {
-        return postServiceInterface.savePost(postDto);
+    public ResponseEntity<?> saveNewPost(
+            @RequestBody PostDTO postDTO
+    ) {
+        System.out.println("LLLLLLLLLLLLLLLLL");
+        System.out.println(postDTO);
+        System.out.println("SSSSSSSSSS");
+        return postServiceInterface.savePost(postDTO);
     }
 
     @GetMapping()

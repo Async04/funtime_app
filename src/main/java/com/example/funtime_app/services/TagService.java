@@ -1,6 +1,7 @@
 package com.example.funtime_app.services;
 
-import com.example.funtime_app.dto.CategoryTagDTO;
+import com.example.funtime_app.dto.request.CategoryRequestTagDTO;
+import com.example.funtime_app.dto.response.CategoryResponseTagDTO;
 import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Category;
 import com.example.funtime_app.entity.CategoryTag;
@@ -24,13 +25,10 @@ public class TagService {
 
     public List<CategoryTag> generateTags(PostDTO postDTO){
 
-        List<CategoryTagDTO> tags = postDTO.tags();
+        List<CategoryRequestTagDTO> tags = postDTO.getTags();
         List<CategoryTag> tagList = new ArrayList<>();
-        for (CategoryTagDTO tag : tags) {
-            CategoryTag categoryTag = CategoryTag.builder()
-                    .tagName(tag.getTagName())
-                    .id(tag.getTagId())
-                    .build();
+        for (CategoryRequestTagDTO tag : tags) {
+            CategoryTag categoryTag = categoryTagRepository.findById(tag.getTagId()).get();
             tagList.add(categoryTag);
         }
         return tagList;
@@ -43,18 +41,18 @@ public class TagService {
 
             Category category = byId.get();
             List<CategoryTag> tags = category.getTags();
-            List<CategoryTagDTO> categoryTagDTOS = new ArrayList<>();
+            List<CategoryResponseTagDTO> categoryResponseTagDTOS = new ArrayList<>();
 
             for (CategoryTag tag : tags) {
-                CategoryTagDTO categoryTagDTO = CategoryTagDTO.builder()
+                CategoryResponseTagDTO categoryResponseTagDTO = CategoryResponseTagDTO.builder()
                         .tagId(tag.getId())
                         .tagName(tag.getTagName())
                         .build();
 
-                categoryTagDTOS.add(categoryTagDTO);
+                categoryResponseTagDTOS.add(categoryResponseTagDTO);
             }
 
-            return ResponseEntity.ok(categoryTagDTOS);
+            return ResponseEntity.ok(categoryResponseTagDTOS);
         }
         else {
             return ResponseEntity.ok("Not found Category");
