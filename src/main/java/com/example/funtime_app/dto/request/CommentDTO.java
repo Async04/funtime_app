@@ -1,4 +1,4 @@
-package com.example.funtime_app.dto;
+package com.example.funtime_app.dto.request;
 
 import lombok.Value;
 

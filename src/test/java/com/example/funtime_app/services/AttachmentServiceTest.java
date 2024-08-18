@@ -1,19 +1,14 @@
 package com.example.funtime_app.services;
 
 import com.example.funtime_app.entity.Attachment;
-import com.example.funtime_app.mappers.UserMapper;
 import com.example.funtime_app.repository.AttachmentRepository;
-import com.example.funtime_app.repository.UserRepository;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AttachmentServiceTest {
 

@@ -7,10 +7,8 @@ import com.example.funtime_app.dto.request.ResendCodeDTO;
 import com.example.funtime_app.dto.response.UserResponseDTO;
 import com.example.funtime_app.entity.*;
 import com.example.funtime_app.entity.enums.OTPStatus;
-import com.example.funtime_app.entity.enums.RoleName;
 import com.example.funtime_app.entity.enums.UserStatus;
 import com.example.funtime_app.interfaces.UserServiceInterface;
-import com.example.funtime_app.mappers.UserMapper;
 import com.example.funtime_app.projection.UserEditProjection;
 import com.example.funtime_app.projection.UserProfileProjection;
 import com.example.funtime_app.repository.*;
@@ -31,8 +29,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface {
 
-
-    private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final OTPService otpService;
