@@ -31,7 +31,7 @@ public class PostController {
     }
 
     @GetMapping()
-    public Page<Post> getPosts(
+    public ResponseEntity<?> getPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -39,8 +39,7 @@ public class PostController {
     }
 
     @GetMapping("/{tagsId}")
-    public ResponseEntity<List<PostDTO>> getByTagsId(@PathVariable UUID tagsId){
-
+    public ResponseEntity<?> getByTagsId(@PathVariable UUID tagsId){
         return postServiceInterface.getAllTagsPost(tagsId);
 
     }
@@ -106,4 +105,5 @@ public class PostController {
     public ResponseEntity<?> getUserPosts(@PathVariable UUID userId) {
         return postServiceInterface.getUserAllPosts(userId);
     }
+
 }

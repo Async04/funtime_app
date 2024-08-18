@@ -26,7 +26,6 @@ public class Rate {
     @ManyToOne
     private Post post;
 
-
     private Integer markValue;
 
 

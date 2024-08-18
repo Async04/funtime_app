@@ -101,6 +101,7 @@ public class UserService implements UserServiceInterface {
     @Override
     public ResponseEntity<?> getUserProfile(UUID userId) {
         UserProfileProjection userProfile = userRepository.getUserProfile(userId);
+        System.out.println(userProfile);
         return ResponseEntity.ok(userProfile);
     }
 

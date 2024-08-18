@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface CommentServiceImpl {
     HttpEntity<?> getComments(UUID postId);
-    HttpEntity<?> saveComment(CommentDTO commentDto, UUID parentCommentId);
+    HttpEntity<?> saveComment(CommentDTO commentDto);
     HttpEntity<?> getChildComments(UUID parentCommentId);
 }

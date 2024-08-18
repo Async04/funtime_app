@@ -1,6 +1,5 @@
 package com.example.funtime_app.repository;
 
-import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -109,10 +108,6 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     List<Post> findAllByCategoryId(UUID categoryId);
 
-    @Query("SELECT p FROM Post p WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :search, '%'))")
-    List<Post> findAllByTitleContainingIgnoreCase(@Param("search") String search);
-
-
     @Query(nativeQuery = true, value = """
             SELECT
                         u.first_name ||' '|| u.last_name as fullname,
@@ -145,9 +140,52 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
         JOIN users u ON p.user_id = u.id
         JOIN attachment a ON a.id = p.attachment_id
         JOIN category_tag ct ON ct.id = :tagsId
-        JOIN post_tags pt ON pt.post_id = p.id AND pt.tags_id = ct.id
+        JOIN posts_tags pt ON pt.post_id = p.id AND pt.tags_id = ct.id
         WHERE ct.id = :tagsId
         """)
-    List<PostDTO> getAllPostByTagsId(@Param("tagsId") UUID tagsId);
+    List<PopularNewTrendyPostProjection> getAllPostByTagsId(@Param("tagsId") UUID tagsId);
 
+
+
+
+    @Query(nativeQuery = true, value = """
+
+            select
+                           p.id post_id,
+                           p.attachment_id post_attachment_id
+            ,
+                           p.user_id,
+                           u.profile_photo_id,
+                           p.title,
+                           p.description
+           
+                           from posts p
+                           join users u on p.
+            user_id=u.id
+                           join
+            attachment a on a.id=p.attachment_id
+            where title ilike :search or description ilike :search
+           
+           
+                        
+                """)
+    List<PopularNewTrendyPostProjection> searchPosts(String search);
+
+    @Query(nativeQuery = true, value = """
+        select
+                 p.id post_id,
+                 p.attachment_id post_attachment_id,
+                 p.user_id,
+                 u.profile_photo_id,
+                 p.title,
+                 p.description
+                 from posts p
+                 join users u on p.user_id = u.id
+                 join attachment a on a.id = p.attachment_id
+                 order by random()
+                 limit :limit  offset :offset 
+
+                 
+""")
+    List<PopularNewTrendyPostProjection> getAllPosts(@Param("offset") int offset, @Param("limit") int limit);
 }

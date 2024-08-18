@@ -7,6 +7,7 @@ import com.example.funtime_app.entity.*;
 import com.example.funtime_app.interfaces.CommentServiceImpl;
 import com.example.funtime_app.mappers.SendCommentMapper;
 import com.example.funtime_app.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,8 @@ public class CommentService implements CommentServiceImpl {
 
 
     @Override
-    public HttpEntity<?> saveComment(CommentDTO commentDto, UUID parentCommentId) {
+    @Transactional
+    public HttpEntity<?> saveComment(CommentDTO commentDto) {
         try {
             Optional<Post> postOptional = postRepository.findById(commentDto.getPostId());
             Comment comment = null;
@@ -54,27 +56,28 @@ public class CommentService implements CommentServiceImpl {
                 Optional<User> userOptional =  userRepository.findById(commentDto.getUserId());
                 if (userOptional.isPresent()) {
                     user = userOptional.get();
+                    comment = Comment.builder()
+                            .body(commentDto.getBody())
+                            .post(post)
+                            .commentedBy(user)
+                            .build();
+
+                    if (commentDto.getParentCommentId() != null) {
+                        comment.setParentCommentId(commentDto.getParentCommentId());
+                    }
+                    commentRepository.save(comment);
+                    return ResponseEntity.ok("Comment saved successfully");
                 }
-                Rate rate = Rate.builder()
-                        .ratedBy(user)
-                        .post(post)
-                        .markValue(commentDto.getRateMarkValue())
-                        .build();
-                rateRepository.save(rate);
-                comment = Comment.builder()
-                        .body(commentDto.getBody())
-                        .post(post)
-                        .commentedBy(user)
-                        .rate(rate)
-                        .build();
-            }
-            if (comment != null) {
-                if (parentCommentId != null) {
-                    comment.setParentCommentId(parentCommentId);
+
+                else {
+                    return ResponseEntity.badRequest().body("User not found!!!");
                 }
-                commentRepository.save(comment);
+
             }
-            return ResponseEntity.ok(commentDto);
+            else {
+                return ResponseEntity.badRequest().body("Post not found!!!");
+            }
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Comment not saved!!!");
         }

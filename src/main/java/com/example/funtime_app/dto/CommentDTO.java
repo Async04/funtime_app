@@ -14,5 +14,4 @@ public class CommentDTO implements Serializable {
     UUID postId;
     UUID userId;
     UUID parentCommentId;
-    Integer rateMarkValue;
 }

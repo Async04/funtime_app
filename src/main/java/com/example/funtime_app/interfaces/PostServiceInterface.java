@@ -14,7 +14,7 @@ public interface PostServiceInterface {
 
     ResponseEntity<?> savePost(PostDTO postDto);
 
-    Page<Post> getPosts(int page, int size);
+    ResponseEntity<?> getPosts(int page, int size);
 
     ResponseEntity<?> getPopularPosts(int page, int size);
 
@@ -29,5 +29,5 @@ public interface PostServiceInterface {
 
     ResponseEntity<?> getUserAllPosts(UUID userId);
 
-    ResponseEntity<List<PostDTO>> getAllTagsPost(UUID tagsId);
+    ResponseEntity<?> getAllTagsPost(UUID tagsId);
 }

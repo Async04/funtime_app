@@ -25,8 +25,8 @@ public class CommentController {
     }
 
     @PostMapping("/add")
-    public HttpEntity<?> addComment(CommentDTO commentDto, @RequestParam(required = false) UUID parentCommentId){
-       return commentService.saveComment(commentDto,parentCommentId);
+    public HttpEntity<?> addComment(CommentDTO commentDto){
+       return commentService.saveComment(commentDto);
     }
 
    

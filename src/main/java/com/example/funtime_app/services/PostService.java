@@ -23,7 +23,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,9 +73,10 @@ public class PostService implements PostServiceInterface {
        }
 
     @Override
-    public Page<Post> getPosts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
-        return postRepository.findAll(pageable);
+    public ResponseEntity<?> getPosts(int page, int size) {
+
+        List<PopularNewTrendyPostProjection> posts = postRepository.getAllPosts((page+1)*size, size);
+        return ResponseEntity.ok(posts);
     }
 
     @Cacheable(value = "popularPosts")
@@ -150,8 +150,9 @@ public class PostService implements PostServiceInterface {
     @Override
     public HttpEntity<?> getSearchedPosts(String search) {
         try {
-            List<Post> posts =
-                    postRepository.findAllByTitleContainingIgnoreCase(search);
+            search="%"+search+"%";
+            List<PopularNewTrendyPostProjection> posts =
+                    postRepository.searchPosts(search);
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new RuntimeException("not found"));
@@ -168,8 +169,8 @@ public class PostService implements PostServiceInterface {
     }
 
     @Override
-    public ResponseEntity<List<PostDTO>> getAllTagsPost(UUID tagsId) {
-        List<PostDTO> posts = postRepository.getAllPostByTagsId(tagsId);
+    public ResponseEntity<?> getAllTagsPost(UUID tagsId) {
+        List<PopularNewTrendyPostProjection> posts = postRepository.getAllPostByTagsId(tagsId);
         return ResponseEntity.ok(posts);
     }
 }
