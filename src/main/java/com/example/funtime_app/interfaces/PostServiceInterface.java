@@ -30,4 +30,6 @@ public interface PostServiceInterface {
     ResponseEntity<?> getUserAllPosts(UUID userId);
 
     ResponseEntity<?> getAllTagsPost(UUID tagsId);
+
+    ResponseEntity<?> getOnePost(UUID postId);
 }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.UUID;
 
 public interface UserServiceInterface {
@@ -24,4 +25,6 @@ public interface UserServiceInterface {
     ResponseEntity<?> resend(ResendCodeDTO resendCodeDTO);
 
     ResponseEntity<?> changePhoto(ChangePhotoDTO photoDTO);
+
+    ResponseEntity<?> getId();
 }

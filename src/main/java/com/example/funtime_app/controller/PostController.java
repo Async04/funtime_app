@@ -106,4 +106,9 @@ public class PostController {
         return postServiceInterface.getUserAllPosts(userId);
     }
 
+    @GetMapping("/postId")
+    public ResponseEntity<?> getOnePost(@RequestParam UUID postId){
+        return postServiceInterface.getOnePost( postId);
+    }
+
 }

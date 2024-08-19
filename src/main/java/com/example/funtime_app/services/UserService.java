@@ -17,11 +17,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -40,10 +43,14 @@ public class UserService implements UserServiceInterface {
 
 
     @Override
-
     @Transactional
     public HttpEntity<?> saveUser(@Valid UserDTO userDTO) {
         try {
+
+            User byUsername = userRepository.findByUsername(userDTO.username());
+            if (byUsername!=null){
+                return ResponseEntity.badRequest().body("username invalid");
+            }
             Attachment attachment = null;
             if (userDTO.profilePhoto() != null) {
                 MultipartFile multipartFile = userDTO.profilePhoto();
@@ -141,6 +148,12 @@ public class UserService implements UserServiceInterface {
         Optional<User> byId = userRepository.findById(userId);
         System.out.println(userEditDto);
         if (byId.isPresent()){
+
+            User byUsername = userRepository.findByUsername(userEditDto.getUsername());
+            if (byUsername!=null){
+                return ResponseEntity.badRequest().body("username invalid");
+            }
+
             System.out.println("User is valid");
             User user = byId.get();
             if (passwordEncoder.matches(userEditDto.getOldPassword(), user.getPassword())){
@@ -249,6 +262,25 @@ public class UserService implements UserServiceInterface {
         }
 
     }
+
+    @Override
+    public ResponseEntity<?> getId() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User byUsername = userRepository.findByUsername(username);
+        if (byUsername==null){
+            return ResponseEntity.badRequest().body("Not found user!!!");
+        }
+        return ResponseEntity.ok(byUsername.getId());
+    }
+
+
+    public User getMe(Principal principal){
+        String username = principal.getName();
+        return userRepository.findByUsername(username);
+    }
+
 
 
 }

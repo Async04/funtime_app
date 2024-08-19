@@ -37,9 +37,6 @@ public class Video {
 
     private Integer views;
 
-    @OneToMany
-    private List<Rate> rates;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 

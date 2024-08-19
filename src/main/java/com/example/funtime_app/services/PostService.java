@@ -1,12 +1,14 @@
 package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.PostDTO;
+import com.example.funtime_app.dto.response.OnePostDTO;
 import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.PostServiceInterface;
 import com.example.funtime_app.mappers.PostMapper;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
+import com.example.funtime_app.projection.UserPostProjection;
 import com.example.funtime_app.repository.AttachmentRepository;
 import com.example.funtime_app.repository.CategoryRepository;
 import com.example.funtime_app.repository.PostRepository;
@@ -162,7 +164,7 @@ public class PostService implements PostServiceInterface {
     @Override
     public ResponseEntity<?> getUserAllPosts(UUID userId) {
 
-        List<PopularNewTrendyPostProjection> userPosts =
+        List<UserPostProjection> userPosts =
                 postRepository.getAllUserPostsByUserId(userId);
         return ResponseEntity.ok(userPosts);
 
@@ -172,5 +174,21 @@ public class PostService implements PostServiceInterface {
     public ResponseEntity<?> getAllTagsPost(UUID tagsId) {
         List<PopularNewTrendyPostProjection> posts = postRepository.getAllPostByTagsId(tagsId);
         return ResponseEntity.ok(posts);
+    }
+
+    @Override
+    public ResponseEntity<?> getOnePost( UUID postId) {
+        Optional<Post> byId = postRepository.findById(postId);
+        if (byId.isEmpty()){
+            return ResponseEntity.badRequest().body("Not found!!!");
+        }
+        Post post = byId.get();
+        OnePostDTO onePostDTO = OnePostDTO.builder()
+                .id(post.getId())
+                .attachmentId(post.getAttachment().getId())
+                .title(post.getTitle())
+                .description(post.getDescription())
+                .build();
+        return ResponseEntity.ok(onePostDTO);
     }
 }

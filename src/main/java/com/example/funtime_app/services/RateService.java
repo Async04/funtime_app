@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +53,15 @@ public class RateService implements RateServiceInterface {
                return ResponseEntity.badRequest().body("User or Post not found");
            }
        }
+    }
+
+    @Override
+    public ResponseEntity<?> getOnePostRate(UUID postId, UUID userId) {
+        Optional<Rate> byRatedByIdAndPostId = rateRepository.findByRatedByIdAndPostId(userId, postId);
+        if (byRatedByIdAndPostId.isPresent()){
+            Rate rate = byRatedByIdAndPostId.get();
+            return ResponseEntity.ok(rate.getMarkValue());
+        }
+        return ResponseEntity.ok(0);
     }
 }

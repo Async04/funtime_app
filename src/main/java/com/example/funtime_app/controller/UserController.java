@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -72,6 +73,12 @@ public class UserController {
     @PostMapping("/change/photo")
     public ResponseEntity<?> setProfilePhoto(@RequestBody ChangePhotoDTO photoDTO){
        return userServiceInterface.changePhoto(photoDTO);
+    }
+
+    @GetMapping("/getId")
+    public ResponseEntity<?> getUserId(){
+        System.out.println("HHHHHHHHHHHHHHHHHHHH");
+        return userServiceInterface.getId();
     }
 
 }

@@ -5,10 +5,9 @@ import com.example.funtime_app.interfaces.RateServiceInterface;
 import com.example.funtime_app.services.RateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,4 +21,9 @@ public class RateController {
        return rateServiceInterface.ratePost(rateDTO);
     }
 
+    @GetMapping("/post")
+    public ResponseEntity<?> getRateValu(@RequestParam UUID postId, @RequestParam UUID userId){
+        return rateServiceInterface.getOnePostRate(postId, userId);
+
+    }
 }

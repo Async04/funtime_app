@@ -1,7 +1,9 @@
 package com.example.funtime_app.repository;
 
+import com.example.funtime_app.dto.response.OnePostDTO;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
+import com.example.funtime_app.projection.UserPostProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -110,22 +112,25 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @Query(nativeQuery = true, value = """
             SELECT
-                        u.first_name ||' '|| u.last_name as fullname,
-                        TO_CHAR(p.created_at, 'DD.MM.YYYY ') AS date,
-                        p.id AS postId,
-                        p.attachment_id AS postAttachmentId,
-                        p.user_id AS userId,
-                        u.profile_photo_id AS profilePhotoId,
-                        p.title AS title,
-                        p.description AS description
-            FROM posts p
-                     JOIN users u ON p.user_id = u.id
-                     JOIN attachment a ON a.id = p.attachment_id
-            where u.id=:userId
-            ORDER BY  date desc
+                                         u.first_name ||' '|| u.last_name as fullname,
+                                         TO_CHAR(p.created_at, 'DD.MM.YYYY ') AS date,
+                                         p.id AS postId,
+                                         p.attachment_id AS postAttachmentId,
+                                         p.user_id AS userId,
+                                         u.profile_photo_id AS profilePhotoId,
+                                         p.title AS title,
+                                         p.description AS description,
+                                         p.views,
+                                         coalesce ((select avg(r.mark_value) from rate r where r.post_id=p.id),0) as rate_value
+                             FROM posts p
+                                      JOIN users u ON p.user_id = u.id
+                                      JOIN attachment a ON a.id = p.attachment_id
+                             
+                             where u.id=:userId
+                             ORDER BY  date desc
                         
             """)
-    List<PopularNewTrendyPostProjection> getAllUserPostsByUserId(@Param(value = "userId") UUID userId);
+    List<UserPostProjection> getAllUserPostsByUserId(@Param(value = "userId") UUID userId);
 
 
     @Query(nativeQuery = true, value = """
@@ -188,4 +193,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                  
 """)
     List<PopularNewTrendyPostProjection> getAllPosts(@Param("offset") int offset, @Param("limit") int limit);
+
+
+
 }
