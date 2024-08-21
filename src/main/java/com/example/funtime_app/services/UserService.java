@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -47,19 +49,13 @@ public class UserService implements UserServiceInterface {
     public HttpEntity<?> saveUser(@Valid UserDTO userDTO) {
         try {
 
+            if (!isValidPassword(userDTO.password())) {
+                return ResponseEntity.badRequest().body("Password is invalid");
+            }
+
             User byUsername = userRepository.findByUsername(userDTO.username());
             if (byUsername!=null){
                 return ResponseEntity.badRequest().body("username invalid");
-            }
-            Attachment attachment = null;
-            if (userDTO.profilePhoto() != null) {
-                MultipartFile multipartFile = userDTO.profilePhoto();
-                Attachment attachment1 = Attachment.builder()
-                        .contentType("png")
-                        .content(multipartFile.getBytes())
-                        .build();
-                attachmentRepository.save(attachment1);
-                attachment = attachment1;
             }
             List<User> byEmail = userRepository.findByEmail(userDTO.email());
             if (!byEmail.isEmpty()) {
@@ -69,7 +65,7 @@ public class UserService implements UserServiceInterface {
             Optional<Role> byId = roleRepository.findById(2);
             System.out.println(byId.get());
             User user = User.builder()
-                    .profilePhoto(attachment)
+                    .profilePhoto(null)
                     .username(userDTO.username())
                     .firstName(userDTO.firstName())
                     .email(userDTO.email())
@@ -145,6 +141,12 @@ public class UserService implements UserServiceInterface {
     @Transactional
     public ResponseEntity<?> edit(UUID userId, UserEditDTO userEditDto) throws IOException {
 
+
+        if (!isValidPassword(userEditDto.getNewPassword())) {
+            attachmentRepository.deleteById(userEditDto.getBannerAttachmentId());
+            attachmentRepository.deleteById(userEditDto.getProfilePhotoAttachmentId());
+            return ResponseEntity.badRequest().body("Invalid password");
+        }
         Optional<User> byId = userRepository.findById(userId);
         System.out.println(userEditDto);
         if (byId.isPresent()){
@@ -279,6 +281,18 @@ public class UserService implements UserServiceInterface {
     public User getMe(Principal principal){
         String username = principal.getName();
         return userRepository.findByUsername(username);
+    }
+
+
+     private boolean isValidPassword(String password) {
+         String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\n";
+         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+
+         if (password == null) {
+            return false;
+        }
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 
 

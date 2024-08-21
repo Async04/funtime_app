@@ -33,6 +33,32 @@ public class Runner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+//        List<User> all = userRepository.findAll();
+//        List<Category> categories = categoryRepository.findAll();
+//
+//
+//        Path path = Paths.get("src/main/java/com/example/funtime_app/config/", "video.mp4");
+//        byte[] bytes = Files.readAllBytes(path);
+//
+//        Attachment attachment = Attachment.builder()
+//                .content(bytes)
+//                .contentType("mp4")
+//                .build();
+//        attachmentRepository.save(attachment);
+//
+//        Video video = Video.builder()
+//                .user(all.get(23))
+//                .attachment(attachment)
+//                .views(0)
+//                .title("Sport")
+//                .description("rfnir rfinr iefn")
+//                .category(categories.get(2))
+//                .tags(categories.get(2).getTags())
+//                .build();
+//
+//        videoRepository.save(video);
+
+
 
 
 

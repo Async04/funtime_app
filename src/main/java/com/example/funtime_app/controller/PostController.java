@@ -111,4 +111,10 @@ public class PostController {
         return postServiceInterface.getOnePost( postId);
     }
 
+    @PostMapping("/view")
+    public ResponseEntity<?> addView(@RequestParam UUID postId){
+        return postServiceInterface.addView(postId);
+
+    }
+
 }

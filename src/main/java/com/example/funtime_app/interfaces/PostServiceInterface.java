@@ -32,4 +32,6 @@ public interface PostServiceInterface {
     ResponseEntity<?> getAllTagsPost(UUID tagsId);
 
     ResponseEntity<?> getOnePost(UUID postId);
+
+    ResponseEntity<?> addView(UUID postId);
 }

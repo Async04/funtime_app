@@ -1,14 +1,12 @@
 package com.example.funtime_app.controller;
 
+import com.example.funtime_app.dto.request.TagSaveDTO;
 import com.example.funtime_app.repository.CategoryTagRepository;
 import com.example.funtime_app.services.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -25,4 +23,8 @@ public class TagController {
         return tagService.getTagsByCategoryId(categoryId);
     }
 
+    @PostMapping("")
+    public ResponseEntity<?> saveTag(@RequestBody TagSaveDTO tagSaveDTO){
+        return tagService.addTag(tagSaveDTO);
+    }
 }

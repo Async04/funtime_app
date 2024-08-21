@@ -1,5 +1,6 @@
 package com.example.funtime_app.controller;
 
+import com.example.funtime_app.dto.request.EmployeeDTO;
 import com.example.funtime_app.entity.Employee;
 import com.example.funtime_app.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/employees")
@@ -16,27 +19,22 @@ public class EmployeeController {
     private  final EmployeeService employeeService;
 
     @GetMapping
-    public List<Employee> getAllEmployees() {
+    public ResponseEntity<?> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id) {
-        Employee employee = employeeService.getEmployeeById(id);
-        if (employee != null) {
-            return ResponseEntity.ok(employee);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> getEmployeeById(@PathVariable UUID id) {
+         return employeeService.getEmployeeById(id);
     }
 
     @PostMapping
-    public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeService.saveEmployee(employee);
+    public ResponseEntity<?> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        return employeeService.saveEmployee(employeeDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable UUID id) {
         employeeService.deleteEmployee(id);
         return ResponseEntity.ok().build();
     }

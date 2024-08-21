@@ -191,4 +191,18 @@ public class PostService implements PostServiceInterface {
                 .build();
         return ResponseEntity.ok(onePostDTO);
     }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> addView(UUID postId) {
+        Optional<Post> byId = postRepository.findById(postId);
+        if (byId.isPresent()){
+            Post post = byId.get();
+            post.setViews(post.getViews()+1);
+            postRepository.save(post);
+            return ResponseEntity.ok("Viewed !!!");
+        }
+
+        return ResponseEntity.badRequest().body("Post not found!!!");
+    }
 }

@@ -2,6 +2,7 @@ package com.example.funtime_app.controller;
 
 import com.example.funtime_app.dto.CategoryDTO;
 import com.example.funtime_app.dto.PostDTO;
+import com.example.funtime_app.dto.request.CategorySaveDTO;
 import com.example.funtime_app.interfaces.CategoryServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -27,7 +28,10 @@ public class CategoryController {
     }
 
 
-
+    @PostMapping
+    public ResponseEntity<?> saveCategory(@RequestBody CategorySaveDTO categorySaveDTO){
+       return categoryServiceInterface.saveCategory(categorySaveDTO);
+    }
 
 
 }
