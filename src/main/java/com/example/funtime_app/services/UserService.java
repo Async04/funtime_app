@@ -7,10 +7,8 @@ import com.example.funtime_app.dto.request.ResendCodeDTO;
 import com.example.funtime_app.dto.response.UserResponseDTO;
 import com.example.funtime_app.entity.*;
 import com.example.funtime_app.entity.enums.OTPStatus;
-import com.example.funtime_app.entity.enums.RoleName;
 import com.example.funtime_app.entity.enums.UserStatus;
 import com.example.funtime_app.interfaces.UserServiceInterface;
-import com.example.funtime_app.mappers.UserMapper;
 import com.example.funtime_app.projection.UserEditProjection;
 import com.example.funtime_app.projection.UserProfileProjection;
 import com.example.funtime_app.repository.*;
@@ -19,20 +17,23 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface {
 
-
-    private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final EmailService emailService;
     private final OTPService otpService;
@@ -44,19 +45,17 @@ public class UserService implements UserServiceInterface {
 
 
     @Override
-
     @Transactional
     public HttpEntity<?> saveUser(@Valid UserDTO userDTO) {
         try {
-            Attachment attachment = null;
-            if (userDTO.profilePhoto() != null) {
-                MultipartFile multipartFile = userDTO.profilePhoto();
-                Attachment attachment1 = Attachment.builder()
-                        .contentType("png")
-                        .content(multipartFile.getBytes())
-                        .build();
-                attachmentRepository.save(attachment1);
-                attachment = attachment1;
+
+            if (!isValidPassword(userDTO.password())) {
+                return ResponseEntity.badRequest().body("Password is invalid");
+            }
+
+            User byUsername = userRepository.findByUsername(userDTO.username());
+            if (byUsername!=null){
+                return ResponseEntity.badRequest().body("username invalid");
             }
             List<User> byEmail = userRepository.findByEmail(userDTO.email());
             if (!byEmail.isEmpty()) {
@@ -66,7 +65,7 @@ public class UserService implements UserServiceInterface {
             Optional<Role> byId = roleRepository.findById(2);
             System.out.println(byId.get());
             User user = User.builder()
-                    .profilePhoto(attachment)
+                    .profilePhoto(null)
                     .username(userDTO.username())
                     .firstName(userDTO.firstName())
                     .email(userDTO.email())
@@ -101,6 +100,7 @@ public class UserService implements UserServiceInterface {
     @Override
     public ResponseEntity<?> getUserProfile(UUID userId) {
         UserProfileProjection userProfile = userRepository.getUserProfile(userId);
+        System.out.println(userProfile);
         return ResponseEntity.ok(userProfile);
     }
 
@@ -141,9 +141,21 @@ public class UserService implements UserServiceInterface {
     @Transactional
     public ResponseEntity<?> edit(UUID userId, UserEditDTO userEditDto) throws IOException {
 
+
+        if (!isValidPassword(userEditDto.getNewPassword())) {
+            attachmentRepository.deleteById(userEditDto.getBannerAttachmentId());
+            attachmentRepository.deleteById(userEditDto.getProfilePhotoAttachmentId());
+            return ResponseEntity.badRequest().body("Invalid password");
+        }
         Optional<User> byId = userRepository.findById(userId);
         System.out.println(userEditDto);
         if (byId.isPresent()){
+
+            User byUsername = userRepository.findByUsername(userEditDto.getUsername());
+            if (byUsername!=null){
+                return ResponseEntity.badRequest().body("username invalid");
+            }
+
             System.out.println("User is valid");
             User user = byId.get();
             if (passwordEncoder.matches(userEditDto.getOldPassword(), user.getPassword())){
@@ -252,6 +264,37 @@ public class UserService implements UserServiceInterface {
         }
 
     }
+
+    @Override
+    public ResponseEntity<?> getId() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User byUsername = userRepository.findByUsername(username);
+        if (byUsername==null){
+            return ResponseEntity.badRequest().body("Not found user!!!");
+        }
+        return ResponseEntity.ok(byUsername.getId());
+    }
+
+
+    public User getMe(Principal principal){
+        String username = principal.getName();
+        return userRepository.findByUsername(username);
+    }
+
+
+     private boolean isValidPassword(String password) {
+         String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\n";
+         Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+
+         if (password == null) {
+            return false;
+        }
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+
 
 
 }

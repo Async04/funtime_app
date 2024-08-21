@@ -1,4 +1,4 @@
-package com.example.funtime_app.dto;
+package com.example.funtime_app.dto.request;
 
 import lombok.Value;
 
@@ -14,5 +14,4 @@ public class CommentDTO implements Serializable {
     UUID postId;
     UUID userId;
     UUID parentCommentId;
-    Integer rateMarkValue;
 }

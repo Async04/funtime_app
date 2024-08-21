@@ -1,6 +1,8 @@
 package com.example.funtime_app.controller;
 
+import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.FormData;
+import com.example.funtime_app.repository.AttachmentRepository;
 import com.example.funtime_app.services.FormDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class FormController {
     private static final String UPLOADED_FOLDER = "uploads/";
 
     private final FormDataService formDataService;
+    private final AttachmentRepository attachmentRepository;
 
     @PostMapping("/submit-form")
     public ResponseEntity<?> handleFormSubmission(
@@ -29,39 +34,25 @@ public class FormController {
             @RequestParam("name") String name,
             @RequestParam("email") String email,
             @RequestParam("explanation") String explanation,
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("file") UUID attachmentId) {
 
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("File is empty");
+
+        Optional<Attachment> attachmentOptional = attachmentRepository.findById(attachmentId);
+        Attachment attachment = null;
+        if (attachmentOptional.isPresent()){
+            attachment=attachmentOptional.get();
         }
 
-        try {
+        FormData formData = FormData.builder()
+                .explanation(explanation)
+                .subject(subject)
+                .email(email)
+                .name(name)
+                .attachment(attachment)
+                .build();
 
-            Path uploadPath = Paths.get(UPLOADED_FOLDER);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
+        formDataService.saveFormData(formData);
 
-
-            byte[] bytes = file.getBytes();
-            Path path = uploadPath.resolve(file.getOriginalFilename());
-            Files.write(path, bytes);
-
-
-            FormData formData = new FormData();
-            formData.setSubject(subject);
-            formData.setName(name);
-            formData.setEmail(email);
-            formData.setExplanation(explanation);
-            formData.setFilePath(path.toString());
-
-            FormData savedFormData = formDataService.saveFormData(formData);
-
-            return ResponseEntity.ok(savedFormData);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("An error occurred while processing the file");
-        }
+        return ResponseEntity.ok("Thank you contact to us!!!");
     }
 }

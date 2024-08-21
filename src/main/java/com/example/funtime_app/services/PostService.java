@@ -1,12 +1,14 @@
 package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.PostDTO;
+import com.example.funtime_app.dto.response.OnePostDTO;
 import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.Post;
 import com.example.funtime_app.entity.User;
 import com.example.funtime_app.interfaces.PostServiceInterface;
 import com.example.funtime_app.mappers.PostMapper;
 import com.example.funtime_app.projection.PopularNewTrendyPostProjection;
+import com.example.funtime_app.projection.UserPostProjection;
 import com.example.funtime_app.repository.AttachmentRepository;
 import com.example.funtime_app.repository.CategoryRepository;
 import com.example.funtime_app.repository.PostRepository;
@@ -23,7 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,9 +75,10 @@ public class PostService implements PostServiceInterface {
        }
 
     @Override
-    public Page<Post> getPosts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
-        return postRepository.findAll(pageable);
+    public ResponseEntity<?> getPosts(int page, int size) {
+
+        List<PopularNewTrendyPostProjection> posts = postRepository.getAllPosts((page+1)*size, size);
+        return ResponseEntity.ok(posts);
     }
 
     @Cacheable(value = "popularPosts")
@@ -150,8 +152,9 @@ public class PostService implements PostServiceInterface {
     @Override
     public HttpEntity<?> getSearchedPosts(String search) {
         try {
-            List<Post> posts =
-                    postRepository.findAllByTitleContainingIgnoreCase(search);
+            search="%"+search+"%";
+            List<PopularNewTrendyPostProjection> posts =
+                    postRepository.searchPosts(search);
             return ResponseEntity.ok(posts);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new RuntimeException("not found"));
@@ -161,15 +164,45 @@ public class PostService implements PostServiceInterface {
     @Override
     public ResponseEntity<?> getUserAllPosts(UUID userId) {
 
-        List<PopularNewTrendyPostProjection> userPosts =
+        List<UserPostProjection> userPosts =
                 postRepository.getAllUserPostsByUserId(userId);
         return ResponseEntity.ok(userPosts);
 
     }
 
     @Override
-    public ResponseEntity<List<PostDTO>> getAllTagsPost(UUID tagsId) {
-        List<PostDTO> posts = postRepository.getAllPostByTagsId(tagsId);
+    public ResponseEntity<?> getAllTagsPost(UUID tagsId) {
+        List<PopularNewTrendyPostProjection> posts = postRepository.getAllPostByTagsId(tagsId);
         return ResponseEntity.ok(posts);
+    }
+
+    @Override
+    public ResponseEntity<?> getOnePost( UUID postId) {
+        Optional<Post> byId = postRepository.findById(postId);
+        if (byId.isEmpty()){
+            return ResponseEntity.badRequest().body("Not found!!!");
+        }
+        Post post = byId.get();
+        OnePostDTO onePostDTO = OnePostDTO.builder()
+                .id(post.getId())
+                .attachmentId(post.getAttachment().getId())
+                .title(post.getTitle())
+                .description(post.getDescription())
+                .build();
+        return ResponseEntity.ok(onePostDTO);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> addView(UUID postId) {
+        Optional<Post> byId = postRepository.findById(postId);
+        if (byId.isPresent()){
+            Post post = byId.get();
+            post.setViews(post.getViews()+1);
+            postRepository.save(post);
+            return ResponseEntity.ok("Viewed !!!");
+        }
+
+        return ResponseEntity.badRequest().body("Post not found!!!");
     }
 }

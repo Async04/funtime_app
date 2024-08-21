@@ -6,10 +6,8 @@ public interface LatestVideoProjection {
 
   UUID getVideoId();
   UUID getVideoAttachmentId();
-
   String getTitle();
   String getDescription();
-
-
+  Integer getViews();
 
 }

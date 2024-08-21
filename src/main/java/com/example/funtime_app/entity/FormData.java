@@ -3,7 +3,9 @@ package com.example.funtime_app.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Entity
+@Builder
 public class FormData {
     @Id
     @Column(name = "id", nullable = false)
@@ -23,7 +26,8 @@ public class FormData {
     private String name;
     private String email;
     private String explanation;
-    private String filePath;
+    @OneToOne
+    private Attachment attachment;
 
 
 }

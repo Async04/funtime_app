@@ -12,7 +12,9 @@ public interface VideoRepository extends JpaRepository<Video, UUID> {
     @Query(nativeQuery = true, value = """
 
 
-            select v.id video_id, a.id video_attachment_id, v.title, v.description from video v
+            select v.id video_id, a.id video_attachment_id, v.title, v.description,
+             v.views
+             from video v
                     join
             attachment a on a.id=v.attachment_id
                     join users u on u.id = v.user_id

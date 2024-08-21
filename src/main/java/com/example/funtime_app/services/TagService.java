@@ -1,12 +1,15 @@
 package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.request.CategoryRequestTagDTO;
+import com.example.funtime_app.dto.request.TagSaveDTO;
 import com.example.funtime_app.dto.response.CategoryResponseTagDTO;
 import com.example.funtime_app.dto.PostDTO;
 import com.example.funtime_app.entity.Category;
 import com.example.funtime_app.entity.CategoryTag;
 import com.example.funtime_app.repository.CategoryRepository;
 import com.example.funtime_app.repository.CategoryTagRepository;
+import com.example.funtime_app.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class TagService {
 
     private final CategoryTagRepository categoryTagRepository;
     private final CategoryRepository categoryRepository;
+
 
     public List<CategoryTag> generateTags(PostDTO postDTO){
 
@@ -58,5 +62,22 @@ public class TagService {
             return ResponseEntity.ok("Not found Category");
         }
 
+    }
+
+    @Transactional
+    public ResponseEntity<?> addTag(TagSaveDTO tagSaveDTO) {
+        Optional<Category> byId = categoryRepository.findById(tagSaveDTO.getCategoryId());
+        if (byId.isPresent()){
+            CategoryTag categoryTag = CategoryTag.builder()
+                    .tagName(tagSaveDTO.getName())
+                    .build();
+            categoryTagRepository.save(categoryTag);
+            Category category = byId.get();
+            category.getTags().add(categoryTag);
+            categoryRepository.save(category);
+            return ResponseEntity.ok("Tag saved !!!");
+        }
+
+        return ResponseEntity.badRequest().body("Category not found!!!");
     }
 }

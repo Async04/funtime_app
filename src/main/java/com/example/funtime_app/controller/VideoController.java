@@ -1,11 +1,12 @@
 package com.example.funtime_app.controller;
 
+import com.example.funtime_app.dto.request.VideoSaveDTO;
 import com.example.funtime_app.services.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +17,17 @@ public class VideoController {
 
     @GetMapping("/latest")
     public ResponseEntity<?> getLatestVideo(){
-        ResponseEntity<?> latestVideo = videoService.getLatestVideo();
-        return latestVideo;
+        return videoService.getLatestVideo();
 
     }
 
+    @PostMapping("/view")
+    public ResponseEntity<?> addView(@RequestParam UUID videoId){
+        return videoService.addView(videoId);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> saveVideo(@RequestBody VideoSaveDTO videoSaveDTO){
+        return videoService.saveVideo(videoSaveDTO);
+    }
 }

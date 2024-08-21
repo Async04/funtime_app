@@ -33,7 +33,6 @@ public class Comment {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToOne
-    private Rate rate;
+
 
 }

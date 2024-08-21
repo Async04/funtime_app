@@ -1,9 +1,12 @@
 package com.example.funtime_app.services;
 
 import com.example.funtime_app.dto.CategoryDTO;
+import com.example.funtime_app.dto.request.CategorySaveDTO;
+import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.Category;
 import com.example.funtime_app.interfaces.CategoryServiceInterface;
 import com.example.funtime_app.mappers.CategoryMapper;
+import com.example.funtime_app.repository.AttachmentRepository;
 import com.example.funtime_app.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class CategoryService implements CategoryServiceInterface {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final AttachmentRepository attachmentRepository;
 
 
     @Override
@@ -43,5 +47,25 @@ public class CategoryService implements CategoryServiceInterface {
             return ResponseEntity.status(HttpStatus.OK).body(categoryDTO);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category was not found");
+    }
+
+    @Override
+    public ResponseEntity<?> saveCategory(CategorySaveDTO categorySaveDTO) {
+
+        Optional<Attachment> optionalAttachment
+                = attachmentRepository.findById(categorySaveDTO.getAttachmentId());
+
+        if (optionalAttachment.isEmpty()){
+            return ResponseEntity.badRequest().body("File not found!!!");
+        }
+        Attachment attachment = optionalAttachment.get();
+
+        Category category = Category.builder()
+                .attachment(attachment)
+                .name(categorySaveDTO.getName())
+                .build();
+
+        categoryRepository.save(category);
+        return ResponseEntity.ok("Category saved successfully!!!");
     }
 }

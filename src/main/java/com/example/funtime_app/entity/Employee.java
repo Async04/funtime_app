@@ -1,21 +1,29 @@
 package com.example.funtime_app.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "employee")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private UUID id;
 
-    private String name;
+    private String firstName;
+    private String lastName;
 
-    private String role;
+    private String job;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Attachment attachment;
 
 }
