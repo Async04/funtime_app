@@ -30,7 +30,7 @@ public class SecurityConfig {
                             "/api/user/**",
                             "/swagger-ui/**",
                             "/swagger-ui.html",
-                            "/api/auth/**",
+                            "/api/",
                             "/api/user/edit/**",
                             "/api/category/**"
                             ).permitAll()

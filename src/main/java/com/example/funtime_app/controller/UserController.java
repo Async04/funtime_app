@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -121,12 +122,14 @@ public class UserController {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "User profile updated successfully"),
-                    @ApiResponse(responseCode = "400", description = "Invalid profile data")
+                    @ApiResponse(responseCode = "400", description = "Invalid profile data"),
+                    @ApiResponse(responseCode = "403", description = "Password does not match"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
     @PostMapping("/edit/{userId}")
-    public void editProfile(@PathVariable UUID userId, @RequestBody UserEditDTO userEditDto) throws IOException {
-        userServiceInterface.edit(userId, userEditDto);
+    public ResponseEntity<?> editProfile(@PathVariable UUID userId, @RequestBody @Valid UserEditDTO userEditDto) throws IOException {
+        return userServiceInterface.edit(userId, userEditDto);
     }
 
     @Operation(
@@ -137,7 +140,9 @@ public class UserController {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "Edit data retrieved successfully"),
-                    @ApiResponse(responseCode = "404", description = "User not found")
+                    @ApiResponse(responseCode = "400", description = "Invalid user ID format"),
+                    @ApiResponse(responseCode = "404", description = "User not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
     @GetMapping(value = "/edit/{userId}")
@@ -145,12 +150,16 @@ public class UserController {
         return userServiceInterface.getEditData(userId);
     }
 
+
     @Operation(
             summary = "Change user profile photo",
             description = "Update the profile photo of a user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Profile photo updated successfully"),
-                    @ApiResponse(responseCode = "400", description = "Invalid photo data")
+                    @ApiResponse(responseCode = "400", description = "Invalid photo data or user/photo not found"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated"),
+                    @ApiResponse(responseCode = "404", description = "User or photo not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
     @PostMapping("/change/photo")
@@ -158,15 +167,19 @@ public class UserController {
         return userServiceInterface.changePhoto(photoDTO);
     }
 
+
     @Operation(
             summary = "Get user ID",
             description = "Retrieve the ID of the currently authenticated user.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "User ID retrieved successfully")
+                    @ApiResponse(responseCode = "200", description = "User ID retrieved successfully"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized - User is not authenticated"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
     @GetMapping("/getId")
     public ResponseEntity<?> getUserId() {
         return userServiceInterface.getId();
     }
+
 }

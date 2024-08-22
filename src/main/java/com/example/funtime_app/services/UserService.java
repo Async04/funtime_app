@@ -201,12 +201,15 @@ public class UserService implements UserServiceInterface {
 
         try {
             List<UserEditProjection> userEditData = userRepository.getUserEditData(userId);
+            if (userEditData.isEmpty()) {
+                return ResponseEntity.status(404).body("User not found");
+            }
             return ResponseEntity.ok(userEditData);
-        }
-        catch (Exception e){
-            return ResponseEntity.status(401).body("Not found user!!!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal server error");
         }
     }
+
 
     @Override
     public ResponseEntity<?> resend(ResendCodeDTO resendCodeDTO) {
@@ -245,7 +248,7 @@ public class UserService implements UserServiceInterface {
             Optional<Attachment> optionalAttachment = attachmentRepository.findById(photoDTO.getAttachmentId());
 
             if (optionalAttachment.isPresent()){
-                if (user.getProfilePhoto()!=null){
+                if (user.getProfilePhoto() != null){
                     attachmentRepository.deleteById(user.getProfilePhoto().getId());
                 }
 
@@ -253,17 +256,15 @@ public class UserService implements UserServiceInterface {
                 user.setProfilePhoto(attachment);
                 userRepository.save(user);
 
-                return ResponseEntity.ok("User photo set up!!!");
+                return ResponseEntity.ok("Profile photo updated successfully!");
+            } else {
+                return ResponseEntity.badRequest().body("Photo not found!");
             }
-            else {
-                return ResponseEntity.badRequest().body("Photo not found!!!");
-            }
+        } else {
+            return ResponseEntity.badRequest().body("User not found!");
         }
-        else {
-            return ResponseEntity.badRequest().body("User not found!!!");
-        }
-
     }
+
 
     @Override
     public ResponseEntity<?> getId() {

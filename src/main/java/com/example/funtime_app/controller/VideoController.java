@@ -20,19 +20,20 @@ import java.util.UUID;
 public class VideoController {
 
     private final VideoService videoService;
-
     @Operation(
             summary = "Get latest video",
             description = "Retrieve the latest video available.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Latest video successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "No videos found")
+                    @ApiResponse(responseCode = "404", description = "No videos found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
     @GetMapping("/latest")
     public ResponseEntity<?> getLatestVideo() {
         return videoService.getLatestVideo();
     }
+
 
     @Operation(
             summary = "Add view to video",
@@ -42,7 +43,8 @@ public class VideoController {
             },
             responses = {
                     @ApiResponse(responseCode = "200", description = "View count successfully incremented"),
-                    @ApiResponse(responseCode = "404", description = "Video not found")
+                    @ApiResponse(responseCode = "404", description = "Video not found"),
+                    @ApiResponse(responseCode = "400", description = "Invalid video ID")
             }
     )
     @PostMapping("/view")
@@ -55,11 +57,16 @@ public class VideoController {
             description = "Save a new video record.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Video successfully created"),
-                    @ApiResponse(responseCode = "400", description = "Invalid video data")
+                    @ApiResponse(responseCode = "400", description = "Invalid video data"),
+                    @ApiResponse(responseCode = "413", description = "File size exceeds limit"),
+                    @ApiResponse(responseCode = "500", description = "File upload error"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized access"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden operation")
             }
     )
     @PostMapping("")
     public ResponseEntity<?> saveVideo(@RequestBody VideoSaveDTO videoSaveDTO) {
         return videoService.saveVideo(videoSaveDTO);
     }
+
 }

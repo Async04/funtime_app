@@ -23,7 +23,7 @@ public class FileController {
     private final FileService fileService;
 
     @Operation(
-            summary = "Get photo by ID",
+            summary = "Get photo by  attachmentId",
             description = "Retrieve a photo by its ID and return it in the response.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Photo successfully retrieved"),
@@ -36,7 +36,7 @@ public class FileController {
     }
 
     @Operation(
-            summary = "Get video by ID",
+            summary = "Get video by attachmentId",
             description = "Retrieve a video by its ID and return it in the response.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Video successfully retrieved"),
