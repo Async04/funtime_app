@@ -24,7 +24,7 @@ public class CommentController {
             description = "Retrieve all comments associated with a specific post using the post ID.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Comments successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "Post not found")
+                    @ApiResponse(responseCode = "404", description = "Comment not found")
             }
     )
     @GetMapping
@@ -37,7 +37,7 @@ public class CommentController {
             description = "Retrieve all child comments of a specific parent comment using the parent comment ID.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Child comments successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "Parent comment not found")
+                    @ApiResponse(responseCode = "404", description = "Comment not found")
             }
     )
     @GetMapping("/child")
@@ -50,7 +50,9 @@ public class CommentController {
             description = "Add a new comment to a post or as a child comment to another comment.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Comment successfully added"),
-                    @ApiResponse(responseCode = "400", description = "Invalid comment data")
+                    @ApiResponse(responseCode = "400", description = "Invalid comment data"),
+                    @ApiResponse(responseCode = "404", description = "Not found!!!"),
+                    @ApiResponse(responseCode = "500", description = "Not saved!!!")
             }
     )
     @PostMapping("/add")

@@ -25,7 +25,9 @@ public class EmployeeController {
             description = "Retrieve a list of all employees.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Employees successfully retrieved"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error")
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt"),
+                    @ApiResponse(responseCode = "404", description = "Not found!!!")
             }
     )
     @GetMapping
@@ -38,7 +40,9 @@ public class EmployeeController {
             description = "Retrieve a specific employee by their ID.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Employee successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "Employee not found")
+                    @ApiResponse(responseCode = "404", description = "Employee not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @GetMapping("/{id}")
@@ -51,7 +55,9 @@ public class EmployeeController {
             description = "Create a new employee with the provided details.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Employee successfully created"),
-                    @ApiResponse(responseCode = "400", description = "Invalid employee data")
+                    @ApiResponse(responseCode = "400", description = "Invalid employee data"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @PostMapping
@@ -64,7 +70,8 @@ public class EmployeeController {
             description = "Delete an existing employee by their ID.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Employee successfully deleted"),
-                    @ApiResponse(responseCode = "404", description = "Employee not found")
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @DeleteMapping("/{id}")

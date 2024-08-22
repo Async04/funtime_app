@@ -30,6 +30,9 @@ public class CategoryService implements CategoryServiceInterface {
     @Override
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
+        if (categories.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
         List<CategoryDTO> collect = categories.stream()
                 .map(categoryMapper::toDto)
                 .collect(Collectors.toList());
@@ -56,7 +59,7 @@ public class CategoryService implements CategoryServiceInterface {
                 = attachmentRepository.findById(categorySaveDTO.getAttachmentId());
 
         if (optionalAttachment.isEmpty()){
-            return ResponseEntity.badRequest().body("File not found!!!");
+            return ResponseEntity.status(404).body("File not found!!!");
         }
         Attachment attachment = optionalAttachment.get();
 

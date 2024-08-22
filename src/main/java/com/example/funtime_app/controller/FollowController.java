@@ -25,7 +25,11 @@ public class FollowController {
             description = "Follow a user with the provided follower details.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "User successfully followed"),
-                    @ApiResponse(responseCode = "400", description = "Invalid follower data")
+                    @ApiResponse(responseCode = "400", description = "Invalid follower data"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt"),
+                    @ApiResponse(responseCode = "400", description = "Already followed")
+
             }
     )
     @PostMapping("/follow")
@@ -38,7 +42,9 @@ public class FollowController {
             description = "Retrieve the number of followers for a specific user.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Follower count successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "User not found")
+                    @ApiResponse(responseCode = "404", description = "User not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @GetMapping("/count")
@@ -52,7 +58,9 @@ public class FollowController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "User successfully unfollowed"),
                     @ApiResponse(responseCode = "400", description = "Invalid data provided"),
-                    @ApiResponse(responseCode = "404", description = "User or follower not found")
+                    @ApiResponse(responseCode = "404", description = "User or follower not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @PostMapping("/unfollow")

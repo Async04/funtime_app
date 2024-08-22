@@ -28,6 +28,9 @@ public class CommentService implements CommentServiceImpl {
     @Override
     public HttpEntity<?> getComments(UUID postId) {
         List<CommentResponseProjection> comments = commentRepository.getAllPostComments(postId);
+        if(comments.isEmpty()){
+            return ResponseEntity.status(404).body("Comment not found");
+        }
         return ResponseEntity.ok(comments);
     }
 
@@ -36,6 +39,9 @@ public class CommentService implements CommentServiceImpl {
     @Override
     public HttpEntity<?> getChildComments(UUID parentCommentId) {
         List<CommentResponseProjection> comments = commentRepository.getAllReplyComment(parentCommentId);
+        if (comments.isEmpty()){
+            return ResponseEntity.status(404).body("Comments not found");
+        }
         return ResponseEntity.ok(comments);
     }
 
@@ -68,12 +74,12 @@ public class CommentService implements CommentServiceImpl {
                 }
 
                 else {
-                    return ResponseEntity.badRequest().body("User not found!!!");
+                    return ResponseEntity.status(404).body("User not found!!!");
                 }
 
             }
             else {
-                return ResponseEntity.badRequest().body("Post not found!!!");
+                return ResponseEntity.status(404).body("Post not found!!!");
             }
 
         } catch (Exception e) {

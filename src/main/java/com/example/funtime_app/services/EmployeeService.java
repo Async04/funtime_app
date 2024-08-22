@@ -24,6 +24,9 @@ public class EmployeeService {
 
     public ResponseEntity<?> getAllEmployees() {
         List<EmployeeResponseProjection> allEmployees = employeeRepository.getAllEmployees();
+        if (allEmployees.isEmpty()){
+            return ResponseEntity.status(404).body("Employees not found!!!");
+        }
         return ResponseEntity.ok(allEmployees);
     }
 
@@ -34,7 +37,7 @@ public class EmployeeService {
             return ResponseEntity.ok(employee);
         }
 
-        return ResponseEntity.badRequest().body("Employee not found");
+        return ResponseEntity.status(404).body("Employee not found");
     }
 
     @Transactional

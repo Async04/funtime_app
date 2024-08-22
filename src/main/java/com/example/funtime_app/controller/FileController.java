@@ -27,7 +27,9 @@ public class FileController {
             description = "Retrieve a photo by its ID and return it in the response.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Photo successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "Photo not found")
+                    @ApiResponse(responseCode = "404", description = "Photo not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @GetMapping("/photo/{id}")
@@ -40,7 +42,9 @@ public class FileController {
             description = "Retrieve a video by its ID and return it in the response.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Video successfully retrieved"),
-                    @ApiResponse(responseCode = "404", description = "Video not found")
+                    @ApiResponse(responseCode = "404", description = "Video not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @GetMapping("/video/{id}")
@@ -53,7 +57,9 @@ public class FileController {
             description = "Upload a file (photo or video) to the server.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "File successfully uploaded"),
-                    @ApiResponse(responseCode = "400", description = "Invalid file or upload request")
+                    @ApiResponse(responseCode = "400", description = "Invalid file or upload request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

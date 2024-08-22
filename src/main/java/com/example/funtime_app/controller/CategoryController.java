@@ -6,14 +6,17 @@ import com.example.funtime_app.interfaces.CategoryServiceInterface;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
 @Tag(name = "Category API", description = "Category management API for handling categories and their tags.")
@@ -33,11 +36,13 @@ public class CategoryController {
         return categoryServiceInterface.getAllTagsByCategory(id);
     }
 
+
     @Operation(
             summary = "Get all categories",
             description = "Retrieve a list of all categories.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Categories successfully retrieved")
+                    @ApiResponse(responseCode = "200", description = "Categories successfully retrieved"),
+                    @ApiResponse(responseCode = "404", description = "Categories not found!!!")
             }
     )
     @GetMapping
@@ -50,11 +55,12 @@ public class CategoryController {
             description = "Create a new category with the provided details.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Category successfully created"),
-                    @ApiResponse(responseCode = "400", description = "Invalid category data")
+                    @ApiResponse(responseCode = "404", description = "File not found"),
+                    @ApiResponse(responseCode = "403", description = "Field must not be blank!!!")
             }
     )
     @PostMapping
-    public ResponseEntity<?> saveCategory(@RequestBody CategorySaveDTO categorySaveDTO) {
+    public ResponseEntity<?> saveCategory(@Valid @RequestBody CategorySaveDTO categorySaveDTO) {
         return categoryServiceInterface.saveCategory(categorySaveDTO);
     }
 }
