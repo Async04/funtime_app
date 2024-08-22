@@ -4,23 +4,20 @@ import com.example.funtime_app.entity.Attachment;
 import com.example.funtime_app.entity.FormData;
 import com.example.funtime_app.repository.AttachmentRepository;
 import com.example.funtime_app.services.FormDataService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "Form API", description = "API for handling form submissions including file attachments.")
 public class FormController {
 
     private static final String UPLOADED_FOLDER = "uploads/";
@@ -28,6 +25,14 @@ public class FormController {
     private final FormDataService formDataService;
     private final AttachmentRepository attachmentRepository;
 
+    @Operation(
+            summary = "Handle form submission",
+            description = "Submit a form with subject, name, email, explanation, and an optional attachment.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Form successfully submitted"),
+                    @ApiResponse(responseCode = "400", description = "Invalid form data or attachment ID")
+            }
+    )
     @PostMapping("/submit-form")
     public ResponseEntity<?> handleFormSubmission(
             @RequestParam("subject") String subject,
@@ -36,11 +41,10 @@ public class FormController {
             @RequestParam("explanation") String explanation,
             @RequestParam("file") UUID attachmentId) {
 
-
         Optional<Attachment> attachmentOptional = attachmentRepository.findById(attachmentId);
         Attachment attachment = null;
         if (attachmentOptional.isPresent()){
-            attachment=attachmentOptional.get();
+            attachment = attachmentOptional.get();
         }
 
         FormData formData = FormData.builder()
@@ -53,6 +57,6 @@ public class FormController {
 
         formDataService.saveFormData(formData);
 
-        return ResponseEntity.ok("Thank you contact to us!!!");
+        return ResponseEntity.ok("Thank you for contacting us!");
     }
 }
