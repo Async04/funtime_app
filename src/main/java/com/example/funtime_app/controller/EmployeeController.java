@@ -51,7 +51,6 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
-    @PreAuthorize(value = "ROLE_ADMIN")
     @Operation(
             summary = "Create a new employee",
             description = "Create a new employee with the provided details.",
@@ -64,6 +63,7 @@ public class EmployeeController {
     )
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
         return employeeService.saveEmployee(employeeDTO);
     }
@@ -77,7 +77,7 @@ public class EmployeeController {
                     @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
-    @PreAuthorize(value = "ROLE_ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID id) {
         employeeService.deleteEmployee(id);

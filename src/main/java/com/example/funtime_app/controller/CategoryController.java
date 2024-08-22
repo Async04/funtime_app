@@ -60,7 +60,7 @@ public class CategoryController {
                     @ApiResponse(responseCode = "403", description = "Field must not be blank!!!")
             }
     )
-    @PreAuthorize("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> saveCategory(@Valid @RequestBody CategorySaveDTO categorySaveDTO) {
         return categoryServiceInterface.saveCategory(categorySaveDTO);
