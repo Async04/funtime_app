@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +60,7 @@ public class CategoryController {
                     @ApiResponse(responseCode = "403", description = "Field must not be blank!!!")
             }
     )
+    @PreAuthorize("ROLE_ADMIN")
     @PostMapping
     public ResponseEntity<?> saveCategory(@Valid @RequestBody CategorySaveDTO categorySaveDTO) {
         return categoryServiceInterface.saveCategory(categorySaveDTO);

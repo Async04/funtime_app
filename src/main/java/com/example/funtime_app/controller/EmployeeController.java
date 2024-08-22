@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -50,6 +51,7 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
+    @PreAuthorize(value = "ROLE_ADMIN")
     @Operation(
             summary = "Create a new employee",
             description = "Create a new employee with the provided details.",
@@ -60,6 +62,7 @@ public class EmployeeController {
                     @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
+
     @PostMapping
     public ResponseEntity<?> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
         return employeeService.saveEmployee(employeeDTO);
@@ -74,6 +77,7 @@ public class EmployeeController {
                     @ApiResponse(responseCode = "403", description = "Forbidden or bad attampt")
             }
     )
+    @PreAuthorize(value = "ROLE_ADMIN")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID id) {
         employeeService.deleteEmployee(id);

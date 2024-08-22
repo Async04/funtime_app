@@ -26,16 +26,14 @@ public class SecurityConfig {
 
         security.authorizeHttpRequests(m->{
             m.requestMatchers("/v3/api-docs/**",
-                            "/api/posts/**",
-                            "/api/user/**",
                             "/swagger-ui/**",
                             "/swagger-ui.html",
-                            "/api/",
-                            "/api/user/edit/**",
-                            "/api/category/**"
+                    "/api/auth/login",
+                    "/api/password/random",
+                    "/api/user/authorize",
+                    "/api/user/otp-check/**",
+                    "/api/user/resend"
                             ).permitAll()
-                    .requestMatchers("/api/posts/**").hasRole("ADMIN")
-                    .requestMatchers("/api/posts/popular").hasRole("USER")
                     .anyRequest()
                     .authenticated();
         });

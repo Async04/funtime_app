@@ -49,7 +49,7 @@ public class UserService implements UserServiceInterface {
     public HttpEntity<?> saveUser(@Valid UserDTO userDTO) {
         try {
 
-            if (!isValidPassword(userDTO.password())) {
+            if (userDTO.password().length()<8) {
                 return ResponseEntity.badRequest().body("Password is invalid");
             }
 
@@ -142,7 +142,7 @@ public class UserService implements UserServiceInterface {
     public ResponseEntity<?> edit(UUID userId, UserEditDTO userEditDto) throws IOException {
 
 
-        if (!isValidPassword(userEditDto.getNewPassword())) {
+        if (userEditDto.getNewPassword().length()<8) {
             attachmentRepository.deleteById(userEditDto.getBannerAttachmentId());
             attachmentRepository.deleteById(userEditDto.getProfilePhotoAttachmentId());
             return ResponseEntity.badRequest().body("Invalid password");
